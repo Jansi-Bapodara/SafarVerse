@@ -1,0 +1,2997 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)http://127.0.0.1:5500/claude4.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafarVerse</title>
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 100 100&#39;&gt;&lt;text y=&#39;.9em&#39; font-size=&#39;90&#39;&gt;%E2%9C%88%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
+<link href="./SafarVerse_files/css2" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ocean: #0A4D68;
+    --ocean-light: #088395;
+    --sand: #F5ECD7;
+    --sunset: #FF6B35;
+    --coral: #FF8C69;
+    --gold: #FFD700;
+    --jungle: #2D6A4F;
+    --sky: #E8F4FD;
+    --white: #FFFFFF;
+    --dark: #1A1A2E;
+    --gray: #6B7280;
+    --light-gray: #F9FAFB;
+    --card-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    --hover-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    --radius: 20px;
+    --radius-sm: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light-gray);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ========= CIRCULAR AIRPLANE ========= */
+  .circle-plane-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* SVG orbit path centered in hero */
+  .orbit-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(700px, 90vw);
+    height: min(700px, 90vh);
+    opacity: 0.18;
+  }
+
+  .orbit-ellipse {
+    fill: none;
+    stroke: rgba(255,255,255,0.6);
+    stroke-width: 1.5;
+    stroke-dasharray: 12 18;
+    stroke-linecap: round;
+  }
+
+  /* The plane that orbits */
+  .circle-plane {
+    position: absolute;
+    font-size: 1.8rem;
+    animation: orbitPlane 18s linear infinite;
+    transform-origin: center center;
+    will-change: transform;
+    /* start at right-center of ellipse */
+    top: 50%;
+    left: 50%;
+  }
+
+  @keyframes orbitPlane {
+    0%   { transform: translate(calc(-50% + var(--rx)), calc(-50% + 0px))       rotate(90deg);  }
+    12%  { transform: translate(calc(-50% + var(--rx70)), calc(-50% - var(--ry71))) rotate(30deg);  }
+    25%  { transform: translate(calc(-50% + 0px),  calc(-50% - var(--ry)))      rotate(-10deg); }
+    37%  { transform: translate(calc(-50% - var(--rx70)), calc(-50% - var(--ry71))) rotate(-70deg); }
+    50%  { transform: translate(calc(-50% - var(--rx)), calc(-50% + 0px))       rotate(-90deg); }
+    62%  { transform: translate(calc(-50% - var(--rx70)), calc(-50% + var(--ry71))) rotate(-150deg);}
+    75%  { transform: translate(calc(-50% + 0px),  calc(-50% + var(--ry)))      rotate(170deg); }
+    87%  { transform: translate(calc(-50% + var(--rx70)), calc(-50% + var(--ry71))) rotate(110deg); }
+    100% { transform: translate(calc(-50% + var(--rx)), calc(-50% + 0px))       rotate(90deg);  }
+  }
+
+  /* Responsive orbit radii via inline style variables */
+
+  /* ========= HERO ========= */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4D68 0%, #088395 40%, #05BFDB 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 2rem;
+    transition: background 1.2s ease;
+  }
+
+  .hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    z-index: 0;
+  }
+
+  .hero-bg-overlay.active { opacity: 0.35; }
+
+  .hero-bg-dim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10,77,104,0.75) 0%, rgba(8,131,149,0.65) 40%, rgba(5,191,219,0.55) 100%);
+    z-index: 1;
+    transition: opacity 0.8s ease;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 400'%3E%3Cpath fill='rgba(255,255,255,0.06)' d='M0,160L48,181.3C96,203,192,245,288,240C384,235,480,181,576,181.3C672,181,768,235,864,234.7C960,235,1056,181,1152,170.7C1248,160,1344,192,1392,208L1440,224L1440,400L0,400Z'/%3E%3C/svg%3E") bottom/cover no-repeat;
+    z-index: 2;
+  }
+
+  .floating-shapes span {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    animation: float 6s ease-in-out infinite;
+    z-index: 2;
+  }
+  .floating-shapes span:nth-child(1) { width:300px;height:300px;top:-100px;left:-80px;animation-delay:0s; }
+  .floating-shapes span:nth-child(2) { width:200px;height:200px;bottom:80px;right:60px;animation-delay:2s; }
+  .floating-shapes span:nth-child(3) { width:150px;height:150px;top:40%;left:70%;animation-delay:4s; }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    animation: fadeDown 0.7s ease 0.1s both;
+  }
+
+  .hero h1 em { color: var(--gold); font-style: italic; }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.85);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.7s ease 0.2s both;
+  }
+
+  .hero-search-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 620px;
+    animation: fadeDown 0.7s ease 0.3s both;
+  }
+
+  .hero-search {
+    display: flex;
+    gap: 0;
+    background: #fff;
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .hero-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 16px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--dark);
+    background: transparent;
+  }
+
+  .hero-search input::placeholder { color: #9CA3AF; }
+
+  .hero-search button {
+    background: linear-gradient(135deg, var(--sunset), var(--coral));
+    color: #fff;
+    border: none;
+    padding: 16px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0 999px 999px 0;
+    transition: opacity 0.2s;
+  }
+
+  .hero-search button:hover { opacity: 0.9; }
+
+  .surprise-btn {
+    background: linear-gradient(135deg, #7C3AED, #A855F7);
+    color: #fff;
+    border: none;
+    padding: 16px 26px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(124,58,237,0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .surprise-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #A855F7, #EC4899);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .surprise-btn:hover::before { opacity: 1; }
+  .surprise-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(124,58,237,0.6); }
+
+  .surprise-btn span { position: relative; z-index: 1; }
+
+  .surprise-btn .sparkle {
+    display: inline-block;
+    animation: spin-sparkle 2s linear infinite;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes spin-sparkle {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.3); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  @keyframes surprise-pop {
+    0% { transform: scale(0.8) rotate(-5deg); opacity: 0; }
+    60% { transform: scale(1.1) rotate(2deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .dest-card.surprise-reveal { animation: surprise-pop 0.5s ease both; }
+
+  .surprise-toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, #7C3AED, #A855F7);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 10px 40px rgba(124,58,237,0.4);
+    z-index: 5000;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .surprise-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    animation: fadeDown 0.7s ease 0.4s both;
+    position: relative;
+    z-index: 3;
+  }
+
+  .hero-stats .stat { text-align: center; }
+  .hero-stats .stat strong { display: block; font-size: 1.8rem; font-weight: 700; color: #fff; }
+  .hero-stats .stat span { font-size: 0.8rem; color: rgba(255,255,255,0.7); letter-spacing: 1px; text-transform: uppercase; }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    animation: bounce 2s infinite;
+    z-index: 3;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.7), transparent);
+  }
+
+  .hero-dest-label {
+    position: absolute;
+    bottom: 5rem;
+    right: 2rem;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 3;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-dest-label.show { opacity: 1; transform: translateY(0); }
+
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ========= NAVBAR ========= */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s;
+  }
+
+  nav.scrolled {
+    background: rgba(10, 77, 104, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 0.8rem 2rem;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-logo .dot { color: var(--gold); }
+
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-btn {
+    background: var(--sunset);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,107,53,0.4); }
+
+  /* ========= MAIN SECTION ========= */
+  .main-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--dark);
+    line-height: 1.2;
+  }
+
+  .section-header h2 span { color: var(--ocean-light); }
+  .section-header p { color: var(--gray); font-size: 0.95rem; }
+
+  /* ========= FILTERS — 3 separate rows ========= */
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    white-space: nowrap;
+    min-width: 90px;
+  }
+
+  .filter-group { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+
+  .filter-chip {
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 2px solid #E5E7EB;
+    background: #fff;
+    color: var(--gray);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-chip:hover { border-color: var(--ocean-light); color: var(--ocean-light); }
+  .filter-chip.active { background: var(--ocean); border-color: var(--ocean); color: #fff; }
+
+  /* Trip type row — different accent */
+  .filter-row.triptype .filter-chip.active {
+    background: var(--jungle);
+    border-color: var(--jungle);
+  }
+  .filter-row.triptype .filter-chip:hover {
+    border-color: var(--jungle);
+    color: var(--jungle);
+  }
+
+  /* Type row — different accent */
+  .filter-row.typerow .filter-chip.active {
+    background: #7C3AED;
+    border-color: #7C3AED;
+  }
+  .filter-row.typerow .filter-chip:hover {
+    border-color: #7C3AED;
+    color: #7C3AED;
+  }
+
+  /* ========= DESTINATION GRID ========= */
+  .dest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.8rem;
+  }
+
+  .dest-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .dest-card:hover { transform: translateY(-8px); box-shadow: var(--hover-shadow); }
+
+  .card-img { height: 220px; overflow: hidden; position: relative; }
+
+  .card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    transition: transform 0.4s;
+  }
+
+  .dest-card:hover .card-img img { transform: scale(1.08); }
+
+  .card-body { padding: 1.2rem 1.4rem; }
+
+  .card-location {
+    font-size: 0.78rem;
+    color: var(--ocean-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .card-desc { font-size: 0.88rem; color: var(--gray); line-height: 1.6; margin-bottom: 0.8rem; }
+
+  .budget-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .budget-badge.low    { background: #DCFCE7; color: #15803D; }
+  .budget-badge.medium { background: #FEF9C3; color: #A16207; }
+  .budget-badge.high   { background: #FEE2E2; color: #B91C1C; }
+
+  .card-meta { display: flex; align-items: center; justify-content: space-between; }
+  .card-meta > span { font-size: 0.82rem; color: var(--gray); }
+
+  .add-btn {
+    background: linear-gradient(135deg, var(--ocean), var(--ocean-light));
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .add-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .add-btn.added { background: linear-gradient(135deg, var(--jungle), #52B788); }
+
+  /* ========= MODAL ========= */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: #fff;
+    border-radius: var(--radius);
+    max-width: 740px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.3s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+  .modal-img { height: 280px; position: relative; overflow: hidden; }
+  .modal-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    z-index: 1;
+  }
+
+  .modal-close:hover { background: #fff; }
+
+  .modal-body { padding: 2rem; }
+  .modal-body h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.4rem; }
+  .modal-location { color: var(--ocean-light); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+  .modal-desc { color: var(--gray); line-height: 1.8; margin-bottom: 1.5rem; }
+
+  .modal-info { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .modal-info-item { text-align: center; }
+  .modal-info-item strong { display: block; font-size: 1.1rem; color: var(--dark); }
+  .modal-info-item span { font-size: 0.75rem; color: var(--gray); }
+
+  .modal-cost-banner {
+    background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    border: 1px solid #BFDBFE;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .modal-cost-banner .cost-label { font-size: 0.82rem; color: #1D4ED8; font-weight: 600; }
+  .modal-cost-banner .cost-value { font-size: 1.3rem; font-weight: 700; color: #1E3A8A; font-family: 'Playfair Display', serif; }
+  .modal-cost-banner .cost-note { font-size: 0.75rem; color: #6B7280; width: 100%; }
+
+  /* ========= ITINERARY IN MODAL ========= */
+  .itinerary-section {
+    border-top: 1px solid #F3F4F6;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .itinerary-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--dark);
+    margin-bottom: 1rem;
+  }
+
+  .itinerary-section-title .ai-badge {
+    background: linear-gradient(135deg, #7C3AED, #A855F7);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+  }
+
+  .itinerary-show-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #7C3AED, #A855F7);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .itinerary-show-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  .itinerary-output {
+    background: linear-gradient(135deg, #F8F4FF, #F0EBFF);
+    border: 1px solid #DDD6FE;
+    border-radius: var(--radius-sm);
+    padding: 1.2rem;
+    display: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .itinerary-output.visible { display: block; }
+
+  /* Day cards */
+  .itinerary-days { display: flex; flex-direction: column; gap: 0.8rem; }
+
+  .itinerary-day {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    border-left: 4px solid var(--ocean-light);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    animation: fadeIn 0.4s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .itinerary-day-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.4rem;
+  }
+
+  .day-num {
+    background: var(--ocean);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .day-title {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--dark);
+  }
+
+  .day-activities {
+    font-size: 0.84rem;
+    color: var(--gray);
+    line-height: 1.6;
+    padding-left: 0.5rem;
+  }
+
+  .modal-footer { display: flex; gap: 1rem; align-items: center; padding-top: 1rem; border-top: 1px solid #F3F4F6; margin-top: 1rem; }
+
+  .modal-add-btn {
+    flex: 1;
+    background: linear-gradient(135deg, var(--ocean), var(--ocean-light));
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-add-btn:hover { opacity: 0.9; }
+
+  /* ========= ITINERARY SIDEBAR ========= */
+  .itinerary-toggle {
+    position: fixed;
+    right: 2rem; bottom: 2rem;
+    z-index: 1500;
+    background: linear-gradient(135deg, var(--sunset), var(--coral));
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(255,107,53,0.5);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .itinerary-toggle:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,107,53,0.6); }
+
+  .itinerary-count {
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700;
+  }
+
+  .itinerary-panel {
+    position: fixed;
+    right: -440px; top: 0; bottom: 0;
+    width: 420px;
+    background: #fff;
+    z-index: 3000;
+    box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .itinerary-panel.open { right: 0; }
+
+  .panel-header {
+    background: linear-gradient(135deg, var(--ocean), var(--ocean-light));
+    color: #fff;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .panel-header h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .panel-header p { font-size: 0.82rem; opacity: 0.8; margin-top: 2px; }
+
+  .panel-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+
+  .itinerary-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--gray);
+  }
+
+  .itinerary-empty h4 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--dark); margin-bottom: 0.5rem; }
+
+  .itinerary-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--sky);
+    margin-bottom: 0.8rem;
+    position: relative;
+    transition: transform 0.2s;
+  }
+
+  .itinerary-item:hover { transform: translateX(-4px); }
+
+  .item-img { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-info strong { display: block; font-size: 0.95rem; color: var(--dark); }
+  .item-info .item-loc { font-size: 0.78rem; color: var(--gray); }
+  .item-info .item-cost { font-size: 0.82rem; color: #1D4ED8; font-weight: 600; margin-top: 2px; }
+
+  .item-remove {
+    background: none;
+    border: none;
+    color: #EF4444;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+
+  .item-remove:hover { opacity: 1; }
+
+  /* ========= BUDGET SUMMARY ========= */
+  .panel-summary {
+    flex-shrink: 0;
+    border-top: 1px solid #F3F4F6;
+    padding: 1.5rem;
+    background: #fff;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .summary-row.total {
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding-top: 0.6rem;
+    border-top: 2px solid #E5E7EB;
+    margin-top: 0.4rem;
+  }
+
+  .summary-row.total .inr-total { color: var(--ocean); font-size: 1.15rem; }
+
+  .budget-breakdown {
+    margin: 1rem 0;
+    background: #F3F4F6;
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .budget-breakdown .bar-low    { background: #22C55E; transition: width 0.6s ease; }
+  .budget-breakdown .bar-medium { background: #EAB308; transition: width 0.6s ease; }
+  .budget-breakdown .bar-high   { background: #EF4444; transition: width 0.6s ease; }
+
+  .breakdown-legend {
+    display: flex;
+    gap: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .breakdown-legend span { display: flex; align-items: center; gap: 4px; }
+  .breakdown-legend .dot-low    { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; flex-shrink: 0; }
+  .breakdown-legend .dot-medium { width: 8px; height: 8px; border-radius: 50%; background: #EAB308; flex-shrink: 0; }
+  .breakdown-legend .dot-high   { width: 8px; height: 8px; border-radius: 50%; background: #EF4444; flex-shrink: 0; }
+
+  .plan-btn {
+    width: 100%;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--sunset), var(--coral));
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .plan-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  /* ========= TIPS SECTION ========= */
+  .tips-section {
+    background: linear-gradient(135deg, var(--ocean) 0%, var(--dark) 100%);
+    padding: 5rem 2rem;
+    margin-top: 4rem;
+    color: #fff;
+  }
+
+  .tips-inner { max-width: 1200px; margin: 0 auto; }
+
+  .tips-inner h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .tips-inner h2 em { color: var(--gold); font-style: italic; }
+
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+
+  .tip-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: background 0.3s;
+  }
+
+  .tip-card:hover { background: rgba(255,255,255,0.13); }
+  .tip-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+  .tip-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .tip-card p { font-size: 0.88rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
+
+  /* ========= FOOTER ========= */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+  }
+
+  footer strong { color: #fff; }
+
+  /* ========= NO RESULTS ========= */
+  .no-results {
+    text-align: center;
+    padding: 4rem 1rem;
+    grid-column: 1 / -1;
+    display: none;
+  }
+
+  .no-results.show { display: block; }
+  .no-results .nr-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .no-results h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .no-results p { color: var(--gray); }
+
+  /* ========= DARK MODE ========= */
+  .theme-toggle {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .theme-toggle:hover { background: rgba(255,255,255,0.25); }
+
+  body.dark {
+    --dark: #F1F5F9;
+    --light-gray: #0F172A;
+    --white: #1E293B;
+    --sky: #1E293B;
+    background: #0F172A;
+  }
+
+  body.dark .dest-card { background: #1E293B; }
+  body.dark .card-name { color: #F1F5F9; }
+  body.dark .modal { background: #1E293B; }
+  body.dark .filter-chip { background: #1E293B; border-color: #334155; color: #94A3B8; }
+  body.dark .filter-chip.active { background: var(--ocean); border-color: var(--ocean); color: #fff; }
+  body.dark .filter-row.triptype .filter-chip.active { background: var(--jungle); border-color: var(--jungle); }
+  body.dark .filter-row.typerow .filter-chip.active { background: #7C3AED; border-color: #7C3AED; }
+  body.dark .panel-summary, body.dark .itinerary-panel { background: #1E293B; }
+  body.dark .itinerary-item { background: #0F172A; }
+  body.dark .section-header h2 { color: #F1F5F9; }
+  body.dark .modal-cost-banner { background: #1E3A5F; border-color: #1D4ED8; }
+  body.dark .modal-cost-banner .cost-value { color: #93C5FD; }
+  body.dark .itinerary-output { background: #1E1A2E; border-color: #4C1D95; }
+  body.dark .itinerary-day { background: #0F172A; }
+  body.dark .itinerary-section-title { color: #F1F5F9; }
+  body.dark .day-title { color: #F1F5F9; }
+  body.dark .filter-label { color: #94A3B8; }
+
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(8, 131, 149, 0.4); }
+    100% { box-shadow: 0 0 0 16px rgba(8, 131, 149, 0); }
+  }
+
+  .add-btn.pulse { animation: pulse-ring 0.5s ease; }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+    .itinerary-panel { width: 100%; right: -100%; }
+    .hero-search-row { flex-direction: column; }
+    .hero-search { min-width: unset; }
+    .surprise-btn { width: 100%; justify-content: center; }
+    .filter-label { min-width: unset; }
+  }
+</style>
+</head>
+<body style="">
+
+<!-- NAVBAR -->
+<nav id="navbar" class="scrolled">
+  <div class="nav-logo">✈ SafarVerse<span class="dot">.</span></div>
+  <div class="nav-links">
+    <a href="http://127.0.0.1:5500/claude4.html#destinations">Explore</a>
+    <a href="http://127.0.0.1:5500/claude4.html#tips">Travel Tips</a>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+    <button class="nav-btn" onclick="openPanel()">🗺 My Trip</button>
+  </div>
+</nav>
+
+<!-- SURPRISE TOAST -->
+<div class="surprise-toast" id="surpriseToast">🎲 <span id="surpriseToastText"></span></div>
+
+<!-- HERO -->
+<section class="hero" id="heroSection">
+  <div class="hero-bg-overlay active" id="heroBgOverlay" style="background-image: url(&quot;https://tse2.mm.bing.net/th/id/OIP.BWsHeaWSgQkQhqRHpXI5PwHaEO?rs=1&amp;pid=ImgDetMain&amp;o=7&amp;rm=3&quot;);"></div>
+  <div class="hero-bg-dim" id="heroBgDim"></div>
+  <div class="floating-shapes"><span></span><span></span><span></span></div>
+
+  <!-- CIRCULAR AIRPLANE ORBIT -->
+  <div class="circle-plane-wrapper">
+    <!-- Dotted ellipse orbit path -->
+    <svg class="orbit-svg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+      <ellipse class="orbit-ellipse" cx="350" cy="350" rx="320" ry="200"></ellipse>
+    </svg>
+    <!-- The orbiting plane — JS sets CSS vars for radii -->
+    <div class="circle-plane" id="orbitPlane" style="--rx: 340px; --ry: 187px; --rx70: 238px; --ry71: 162px;">🛩️</div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">✨ Your Adventure Begins Here</div>
+    <h1>A <em>Universe</em> built for you <br>Next <em>Safar</em></h1>
+    <p>Every safar tells a story, and every raahi is at the heart of it. SafarVerse is a world where you can plan, explore, and live your dream journeys. Whether you’re a new raahi or an experienced traveler, this is your space to make every safar unforgettable.</p>
+    <div class="hero-search-row">
+      <div class="hero-search">
+        <input type="text" id="heroSearch" placeholder="Search destinations, countries...">
+        <button id="heroSearchBtn">Search 🔍</button>
+      </div>
+      <button class="surprise-btn" onclick="surpriseMe()">
+        <span class="sparkle">✦</span>
+        <span>CONFUSED? I'll help </span>
+      </button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><strong>55+</strong><span>Destinations</span></div>
+    <div class="stat"><strong>50K+</strong><span>Happy Travelers</span></div>
+    <div class="stat"><strong>4.9★</strong><span>Rating</span></div>
+  </div>
+  <div class="hero-dest-label show" id="heroDestLabel">📍 <span id="heroDestName">Ziro Valley, India</span></div>
+  <div class="scroll-hint">Scroll to explore</div>
+</section>
+
+<!-- DESTINATIONS -->
+<section class="main-section" id="destinations">
+  <div class="section-header">
+    <div>
+      <h2>Popular <span>Destinations</span></h2>
+      <p>Handpicked places that travelers love most</p>
+    </div>
+    <div id="resultCount" style="color:var(--gray);font-size:0.9rem;">55 destinations found</div>
+  </div>
+
+  <!-- 3-ROW FILTER BAR -->
+  <div class="filter-bar">
+    <!-- Row 1: Budget -->
+    <div class="filter-row">
+      <span class="filter-label">💰 Budget</span>
+      <div class="filter-group" id="budgetFilters">
+        <button class="filter-chip active" onclick="setFilter(&#39;budget&#39;,&#39;all&#39;,this)">All</button>
+        <button class="filter-chip" onclick="setFilter(&#39;budget&#39;,&#39;low&#39;,this)">💚 Low</button>
+        <button class="filter-chip" onclick="setFilter(&#39;budget&#39;,&#39;medium&#39;,this)">💛 Medium</button>
+        <button class="filter-chip" onclick="setFilter(&#39;budget&#39;,&#39;high&#39;,this)">❤️ High</button>
+      </div>
+    </div>
+    <!-- Row 2: Trip Type (Domestic / International) -->
+    <div class="filter-row triptype">
+      <span class="filter-label">✈️ Trip</span>
+      <div class="filter-group" id="tripFilters">
+        <button class="filter-chip active" onclick="setFilter(&#39;trip&#39;,&#39;all&#39;,this)">All</button>
+        <button class="filter-chip" onclick="setFilter(&#39;trip&#39;,&#39;domestic&#39;,this)">🇮🇳 Domestic</button>
+        <button class="filter-chip" onclick="setFilter(&#39;trip&#39;,&#39;international&#39;,this)">🌍 International</button>
+      </div>
+    </div>
+    <!-- Row 3: Category -->
+    <div class="filter-row typerow">
+      <span class="filter-label">🗂 Category</span>
+      <div class="filter-group" id="typeFilters">
+        <button class="filter-chip active" onclick="setFilter(&#39;type&#39;,&#39;all&#39;,this)">All</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;adventure&#39;,this)">🏔 Adventure</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;leisure&#39;,this)">🏖 Leisure</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;cultural&#39;,this)">🏛 Cultural</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;nature&#39;,this)">🌿 Nature</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;romantic&#39;,this)">💕 Romantic</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;urban&#39;,this)">🏙 Urban</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;historical&#39;,this)">🏺 Historical</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;spiritual&#39;,this)">🕌 Spiritual</button>
+        <button class="filter-chip" onclick="setFilter(&#39;type&#39;,&#39;luxury&#39;,this)">💎 Luxury</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dest-grid" id="destGrid">
+    <div class="no-results" id="noResults">
+      <div class="nr-icon">🔍</div>
+      <h3>No destinations found</h3>
+      <p>Try adjusting your filters or search term</p>
+    </div>
+  <div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/60d0813807aff-Baga_Beach_In_Goa.jpg" alt="Goa" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Goa</div>
+        <div class="card-desc">Famous for beaches and nightlife</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹8K – ₹15K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(1, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/1581687460_4manali.jpg" alt="Manali" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Manali</div>
+        <div class="card-desc">Mountains and snow activities</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹6K – ₹12K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(2, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/jaipur-hawa-mahal-india.jpg" alt="Jaipur" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Jaipur</div>
+        <div class="card-desc">Palaces and royal heritage</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹5K – ₹10K</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(3, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/leh-ladakh-indiajune-8-2017-600nw-796094905.jpg" alt="Ladakh" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Ladakh</div>
+        <div class="card-desc">High-altitude desert and bike trips</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹15K – ₹30K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(4, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.OGQKGxoipI5VXIRD5QTv3QHaEK" alt="Kerala" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Kerala</div>
+        <div class="card-desc">Backwaters and greenery</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹8K – ₹16K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(5, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.dLCENlw0r39Em78gZRznmAHaFN" alt="Rishikesh" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Rishikesh</div>
+        <div class="card-desc">River rafting and yoga</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(6, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Major-Tourist-Attractions-in-Andaman.jpg" alt="Andaman" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Andaman</div>
+        <div class="card-desc">Crystal clear beaches</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹20K – ₹40K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(7, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/City-Palace-Udaipur.jpg" alt="Udaipur" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Udaipur</div>
+        <div class="card-desc">City of lakes</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹7K – ₹14K</span></div>
+        <div class="card-meta">
+          <span>Romantic</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(8, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/R.27d26e1b15fd1aa0f9486df371f7cce4" alt="Dubai" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 UAE <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Dubai</div>
+        <div class="card-desc">Skyscrapers and desert safari</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹60K – ₹1.2L</span></div>
+        <div class="card-meta">
+          <span>Luxury</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(9, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.XJV8sAkHM9UDOBITw2h2PwHaE5" alt="Paris" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 France <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Paris</div>
+        <div class="card-desc">City of love</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.0L – ₹2.0L</span></div>
+        <div class="card-meta">
+          <span>Romantic</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(10, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.WgvSIPTwAcBbNcVgomwLqwHaFS" alt="Bali" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Indonesia <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Bali</div>
+        <div class="card-desc">Beaches and temples</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹40K – ₹80K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(11, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/8efd3f69-63bb-4398-a595-095cea25fc37.jpg" alt="Tokyo" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Japan <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Tokyo</div>
+        <div class="card-desc">Futuristic city life</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.2L – ₹2.2L</span></div>
+        <div class="card-meta">
+          <span>Urban</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(12, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/maldives-island-1200-x-740-wallpaper-x43656re721me1rz.jpg" alt="Maldives" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Maldives <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Maldives</div>
+        <div class="card-desc">Overwater villas</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.5L – ₹3.5L</span></div>
+        <div class="card-meta">
+          <span>Luxury</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(13, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Singapore-1.jpg" alt="Singapore" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Singapore <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Singapore</div>
+        <div class="card-desc">Clean and modern city</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹60K – ₹1.2L</span></div>
+        <div class="card-meta">
+          <span>Urban</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(14, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.yurcXJwWt5CgaAwqwV7PZgHaEP" alt="Hampi" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Hampi</div>
+        <div class="card-desc">Ancient ruins</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹3K – ₹7K</span></div>
+        <div class="card-meta">
+          <span>Historical</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(15, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.kBG_cvnlb8m88T6crg4MCQHaFB" alt="Coorg" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Coorg</div>
+        <div class="card-desc">Coffee plantations</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹6K – ₹12K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(16, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.tKNUwgqoAvWd1lXvk5KkdgHaEx" alt="Varanasi" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Varanasi</div>
+        <div class="card-desc">Oldest living city</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Spiritual</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(17, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/top-tourist-attractions-shimla-himachal.jpg" alt="Shimla" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Shimla</div>
+        <div class="card-desc">Hill station vibes</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹5K – ₹10K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(18, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.ClxZrA9zC9flog4R8AoG2gHaFj" alt="New York" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 USA <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">New York</div>
+        <div class="card-desc">The city that never sleeps</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.3L – ₹2.5L</span></div>
+        <div class="card-meta">
+          <span>Urban</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(19, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.pSR5avE6aTZi-iWSMEqWPQHaFj" alt="London" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 UK <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">London</div>
+        <div class="card-desc">History meets modern</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.1L – ₹2.0L</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(20, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Bangkok-Thailand.jpg" alt="Bangkok" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Thailand <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Bangkok</div>
+        <div class="card-desc">Street food paradise</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹30K – ₹60K</span></div>
+        <div class="card-meta">
+          <span>Urban</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(21, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/HERO_UltimateRome_Hero_shutterstock789412159.jpg" alt="Rome" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Italy <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Rome</div>
+        <div class="card-desc">Ancient architecture</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹80K – ₹1.6L</span></div>
+        <div class="card-meta">
+          <span>Historical</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(22, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/WhatsApp-Image-2020-03-31-at-3.18.20-PM-1.jpeg" alt="Pondicherry" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Pondicherry</div>
+        <div class="card-desc">French vibes</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(23, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.kfOCC7nc4_4Lesec_1JH6wHaEz" alt="Spiti Valley" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Spiti Valley</div>
+        <div class="card-desc">Cold desert mountains</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹18K – ₹35K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(24, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.x-OIRj6seBewJoR-v-nK1wHaE7" alt="Sydney" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Australia <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Sydney</div>
+        <div class="card-desc">Opera house and beaches</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.2L – ₹2.2L</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(25, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/ca2a82aa-2617-4fac-8e5d-94afa4324d5d.jpg" alt="Cape Town" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 South Africa <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Cape Town</div>
+        <div class="card-desc">Mountains and ocean</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹90K – ₹1.8L</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(26, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/40_2018_Mysore-Palace-3.jpg" alt="Mysore" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Mysore</div>
+        <div class="card-desc">Royal heritage</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹3K – ₹7K</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(27, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/13-25.jpg" alt="Ooty" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Ooty</div>
+        <div class="card-desc">Tea gardens</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹9K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(28, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.LUVlSC5BarbZmUHwBKktWgHaE8" alt="Barcelona" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Spain <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Barcelona</div>
+        <div class="card-desc">Architecture and beaches</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹90K – ₹1.7L</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(29, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.bqwxv_iY3QlmOBtszuKgxwHaE7" alt="Iceland" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Iceland <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Iceland</div>
+        <div class="card-desc">Northern lights</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.2L – ₹2.2L</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(30, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.gsvAr_qj-p56y2-IsjFt8AHaEK" alt="Darjeeling" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Darjeeling</div>
+        <div class="card-desc">Tea hills</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹5K – ₹10K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(31, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/AMRITSAR.jpg" alt="Amritsar" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Amritsar</div>
+        <div class="card-desc">Golden temple</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Spiritual</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(32, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Namsan-Tower-during-autumn-in-Seoul-South-Korea.jpg" alt="Seoul" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 South Korea <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Seoul</div>
+        <div class="card-desc">K-culture hub</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹70K – ₹1.4L</span></div>
+        <div class="card-meta">
+          <span>Urban</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(33, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/10-Best-Things-to-Do-in-Switzerlands-Largest-City-Zurich.jpg" alt="Zurich" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Switzerland <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Zurich</div>
+        <div class="card-desc">Lakes and mountains</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.3L – ₹2.5L</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(34, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/kodaikanal-lake.jpg" alt="Kodaikanal" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Kodaikanal</div>
+        <div class="card-desc">Cool hill station</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹9K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(35, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/1537153061_faacebook2_11.png" alt="Gokarna" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Gokarna</div>
+        <div class="card-desc">Peaceful beaches</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(36, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.CDBpqsAtjnIKGvdQegA1tgHaEO" alt="Los Angeles" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 USA <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Los Angeles</div>
+        <div class="card-desc">Hollywood vibes</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.4L – ₹2.6L</span></div>
+        <div class="card-meta">
+          <span>Urban</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(37, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Berlin-Cathedral-1024x683.jpg" alt="Berlin" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Germany <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Berlin</div>
+        <div class="card-desc">Rich history</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹80K – ₹1.5L</span></div>
+        <div class="card-meta">
+          <span>Historical</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(38, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.LSVHwH-5fePjzvws5aHccAHaFj" alt="Mahabaleshwar" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Mahabaleshwar</div>
+        <div class="card-desc">Strawberries and hills</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹9K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(39, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.5B4hLybrfWQ639g6JH7J5AHaEc" alt="Nainital" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Nainital</div>
+        <div class="card-desc">Lake town</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹9K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(40, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/shutterstockRF_696042793.jpg" alt="Venice" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Italy <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Venice</div>
+        <div class="card-desc">Canals and gondolas</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.2L – ₹2.3L</span></div>
+        <div class="card-meta">
+          <span>Romantic</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(41, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.kY3JsT84m5ntyBOSg-wyZwHaEo" alt="Phuket" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Thailand <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Phuket</div>
+        <div class="card-desc">Island life</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹45K – ₹90K</span></div>
+        <div class="card-meta">
+          <span>Leisure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(42, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/65f77cd305e62109a2392d19bc2ccac6_1000x1000-1024x538.jpg" alt="Shillong" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Shillong</div>
+        <div class="card-desc">Scotland of India</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹6K – ₹12K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(43, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.ecwSEuEKsR-lCOM83ZXYzwHaE5" alt="Tawang" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Tawang</div>
+        <div class="card-desc">Snowy mountains</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹20K – ₹40K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(44, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/view-of-canal-in-amsterdam-923546342-5c7443b546e0fb000143629e.jpg" alt="Amsterdam" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Netherlands <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Amsterdam</div>
+        <div class="card-desc">Canals and bikes</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹90K – ₹1.7L</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(45, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/top-reasons-to-experience-a-luxury-desert-adventure-in-dubai.jpg" alt="Dubai Desert" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 UAE <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Dubai Desert</div>
+        <div class="card-desc">Desert safari</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹70K – ₹1.3L</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(46, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/1507964409_kasol_cover.jpg" alt="Kasol" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Kasol</div>
+        <div class="card-desc">Backpacker paradise</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(47, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/OIP.BWsHeaWSgQkQhqRHpXI5PwHaEO" alt="Ziro Valley" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Ziro Valley</div>
+        <div class="card-desc">Hidden gem</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹5K – ₹10K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn added" onclick="event.stopPropagation(); addToTrip(48, this)">
+            ✓ Added
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Top-10-Must-See-Tourist-Attractions-in-Prague-Czech-Republic.webp" alt="Prague" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Czech Republic <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Prague</div>
+        <div class="card-desc">Fairytale city</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹75K – ₹1.5L</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(49, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/041ae6b1-0a88-4c22-a648-53a22dd4a006.jpg" alt="Santorini" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 Greece <span style="margin-left:4px;opacity:0.7">🌍 International</span></div>
+        <div class="card-name">Santorini</div>
+        <div class="card-desc">White and blue paradise</div>
+        <div class="budget-badge high">❤️ High · <span style="font-weight:700;">₹1.3L – ₹2.4L</span></div>
+        <div class="card-meta">
+          <span>Romantic</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(50, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/rumi-darwaza-lucknow-uttar-pradesh-india-imposing-gateway-which-was-built-nawab-asaf-ud-daula-rumi-darwaza-220793362.jpg" alt="Lucknow" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Lucknow</div>
+        <div class="card-desc">City of Nawabs, famous for food and heritage</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹4K – ₹8K</span></div>
+        <div class="card-meta">
+          <span>Cultural</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(51, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/ff347b0e6e65fedf006759c13fdf7884.jpg" alt="Chandrashila" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Chandrashila</div>
+        <div class="card-desc">Trek with stunning Himalayan summit views</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹8K – ₹16K</span></div>
+        <div class="card-meta">
+          <span>Adventure</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(52, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Statue-of-Unity-Tour-Guide.jpg" alt="Statue of Unity" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Statue of Unity</div>
+        <div class="card-desc">World's tallest statue</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹6K – ₹12K</span></div>
+        <div class="card-meta">
+          <span>Historical</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(53, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/The-Great-Rann-of-Kutch.jpg" alt="Rann of Kutch" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Rann of Kutch</div>
+        <div class="card-desc">White salt desert and Rann Utsav</div>
+        <div class="budget-badge medium">💛 Medium · <span style="font-weight:700;">₹7K – ₹14K</span></div>
+        <div class="card-meta">
+          <span>Nature</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(54, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div><div class="dest-card">
+      <div class="card-img"><img src="./SafarVerse_files/Dwarka-upl.jpg" alt="Dwarka" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 India <span style="margin-left:4px;opacity:0.7">🇮🇳 Domestic</span></div>
+        <div class="card-name">Dwarka</div>
+        <div class="card-desc">One of the Char Dham pilgrimage sites</div>
+        <div class="budget-badge low">💚 Low · <span style="font-weight:700;">₹3K – ₹7K</span></div>
+        <div class="card-meta">
+          <span>Spiritual</span>
+          <button class="add-btn " onclick="event.stopPropagation(); addToTrip(55, this)">
+            ＋ Add
+          </button>
+        </div>
+      </div>
+    </div></div>
+</section>
+
+<!-- TIPS SECTION -->
+<section class="tips-section" id="tips">
+  <div class="tips-inner">
+    <h2>Smart Travel <em>Tips</em> for You</h2>
+    <div class="tips-grid">
+      <div class="tip-card"><div class="tip-icon">📅</div><h4>Book in Advance</h4><p>Save up to 40% by booking flights and hotels at least 6–8 weeks ahead. Early birds get the best deals!</p></div>
+      <div class="tip-card"><div class="tip-icon">🎒</div><h4>Pack Light</h4><p>Master the art of carry-on only travel. One bag means no checked baggage fees and faster airport exits.</p></div>
+      <div class="tip-card"><div class="tip-icon">💳</div><h4>Use Travel Cards</h4><p>Get a travel credit card with no foreign transaction fees. Earn miles on every purchase automatically.</p></div>
+      <div class="tip-card"><div class="tip-icon">🌍</div><h4>Travel Insurance</h4><p>Always insure your trips. It's a small cost for peace of mind against cancellations, medical needs, or lost bags.</p></div>
+      <div class="tip-card"><div class="tip-icon">🍜</div><h4>Eat Like a Local</h4><p>Skip tourist restaurants. Head to local markets and street food stalls for authentic flavors at half the price.</p></div>
+      <div class="tip-card"><div class="tip-icon">📱</div><h4>Offline Maps</h4><p>Download Google Maps offline for your destination. Never get lost even without mobile data abroad.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Made with ❤️ for <strong>SafarVerse - A Universe built for your Safar</strong> · Websprint 2026 · Explore. Dream. Discover.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-img" id="modalImg">
+    <img src="./SafarVerse_files/OIP.BWsHeaWSgQkQhqRHpXI5PwHaEO" alt="Ziro Valley">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+  </div>
+    <div class="modal-body">
+      <h2 id="modalName">Ziro Valley</h2>
+      <div class="modal-location" id="modalLocation">📍 India</div>
+      <div class="modal-info" id="modalInfo">
+    <div class="modal-info-item"><strong>Nature</strong><span>Type</span></div>
+    <div class="modal-info-item"><strong>Low</strong><span>Budget</span></div>
+    <div class="modal-info-item"><strong>Domestic</strong><span>Trip</span></div>
+  </div>
+      <div class="modal-cost-banner" id="modalCostBanner"><div>
+        <div class="cost-label">💚 Estimated Cost (per person)</div>
+        <div class="cost-value">₹5K – ₹10K</div>
+        <div class="cost-note">Includes flights, accommodation &amp; food (5–7 nights approx)</div>
+       </div></div>
+      <p class="modal-desc" id="modalDesc">Hidden gem</p>
+
+      <!-- HARDCODED ITINERARY SECTION -->
+      <div class="itinerary-section">
+        <div class="itinerary-section-title">
+          ✈️ Suggested Itinerary
+          <span class="ai-badge">🗓️ Curated</span>
+        </div>
+        <button class="itinerary-show-btn" id="showItineraryBtn" onclick="showItinerary()">🗓️ View 5-Day Itinerary</button>
+        <div class="itinerary-output" id="itineraryOutput"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-add-btn" id="modalAddBtn">✓ Added to Trip!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ITINERARY PANEL -->
+<div class="itinerary-panel" id="itineraryPanel">
+  <div class="panel-header">
+    <div>
+      <h3>🗺 My Trip Plan</h3>
+      <p id="panelSubtitle">1 destination planned</p>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body" id="panelBody">
+      <div class="itinerary-item">
+        <img class="item-img" src="./SafarVerse_files/OIP.BWsHeaWSgQkQhqRHpXI5PwHaEO" alt="Ziro Valley">
+        <div class="item-info">
+          <strong>Ziro Valley</strong>
+          <div class="item-loc">India · Nature</div>
+          <div class="item-cost">💰 ₹5K – ₹10K / person</div>
+          <div style="font-size:0.75rem;color:#7C3AED;margin-top:2px;">🗓️ Itinerary available</div>
+        </div>
+        <button class="item-remove" onclick="removeItem(48)">✕</button>
+      </div>
+    </div>
+  <div class="panel-summary" id="panelSummary" style="display: block;">
+    <div class="summary-row"><span>Destinations</span><span id="summaryCount">1</span></div>
+    <div class="summary-row"><span>Est. Duration</span><span id="summaryDays">Flexible</span></div>
+    <div style="margin-top:0.8rem;">
+      <div style="font-size:0.78rem;font-weight:600;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Budget Mix</div>
+      <div class="budget-breakdown" id="budgetBar">
+        <div class="bar-low" id="barLow" style="width: 100%;"></div>
+        <div class="bar-medium" id="barMedium" style="width:0%"></div>
+        <div class="bar-high" id="barHigh" style="width:0%"></div>
+      </div>
+      <div class="breakdown-legend">
+        <span><span class="dot-low"></span>Low (<span id="legendLow">1</span>)</span>
+        <span><span class="dot-medium"></span>Medium (<span id="legendMedium">0</span>)</span>
+        <span><span class="dot-high"></span>High (<span id="legendHigh">0</span>)</span>
+      </div>
+    </div>
+    <div class="summary-row" style="font-size:0.82rem;color:var(--gray);"><span>Per-trip estimate range</span></div>
+    <div class="summary-row" style="font-size:0.88rem;"><span>💚 Low trips</span><span id="costLow" style="color:#15803D;font-weight:600;">₹5K – ₹10K</span></div>
+    <div class="summary-row" style="font-size:0.88rem;"><span>💛 Medium trips</span><span id="costMedium" style="color:#A16207;font-weight:600;">₹0</span></div>
+    <div class="summary-row" style="font-size:0.88rem;"><span>❤️ High trips</span><span id="costHigh" style="color:#B91C1C;font-weight:600;">₹0</span></div>
+    <div class="summary-row total">
+      <span>💰 Total Budget (Est.)</span>
+      <span class="inr-total" id="summaryBudget">₹5K – ₹10K</span>
+    </div>
+    <div style="font-size:0.72rem;color:var(--gray);margin-top:4px;line-height:1.4;">*Per person estimate including flights, stay &amp; food (5–7 nights avg)</div>
+    <button class="plan-btn" onclick="alert(&#39;🎉 Trip plan saved! Ready to book your adventure!&#39;)">🚀 Finalize Trip Plan</button>
+  </div>
+</div>
+
+<!-- ITINERARY TOGGLE BUTTON -->
+<button class="itinerary-toggle" id="itineraryToggle" onclick="openPanel()">
+  🗺 My Trip <span class="itinerary-count" id="tripCount">1</span>
+</button>
+
+<script>
+// ── INR Cost map ──────────────────────────────────────────────────────────
+const tripCostINR = {
+  1:[8000,15000],2:[6000,12000],3:[5000,10000],4:[15000,30000],5:[8000,16000],
+  6:[4000,8000],7:[20000,40000],8:[7000,14000],15:[3000,7000],16:[6000,12000],
+  17:[4000,8000],18:[5000,10000],23:[4000,8000],24:[18000,35000],27:[3000,7000],
+  28:[4000,9000],31:[5000,10000],32:[4000,8000],35:[4000,9000],36:[4000,8000],
+  39:[4000,9000],40:[4000,9000],43:[6000,12000],44:[20000,40000],47:[4000,8000],
+  48:[5000,10000],51:[4000,8000],52:[8000,16000],53:[6000,12000],54:[7000,14000],
+  55:[3000,7000],9:[60000,120000],10:[100000,200000],11:[40000,80000],
+  12:[120000,220000],13:[150000,350000],14:[60000,120000],19:[130000,250000],
+  20:[110000,200000],21:[30000,60000],22:[80000,160000],25:[120000,220000],
+  26:[90000,180000],29:[90000,170000],30:[120000,220000],33:[70000,140000],
+  34:[130000,250000],37:[140000,260000],38:[80000,150000],41:[120000,230000],
+  42:[45000,90000],45:[90000,170000],46:[70000,130000],49:[75000,150000],
+  50:[130000,240000]
+};
+
+function formatINR(n){
+  if(n>=100000) return '₹'+(n/100000).toFixed(1)+'L';
+  if(n>=1000)   return '₹'+(n/1000).toFixed(0)+'K';
+  return '₹'+n;
+}
+
+function getCostRange(id){
+  const r=tripCostINR[id];
+  if(!r) return '₹ —';
+  return `${formatINR(r[0])} – ${formatINR(r[1])}`;
+}
+
+// ── HARDCODED ITINERARIES ──────────────────────────────────────────────────
+const itineraries = {
+  1: [ // Goa
+    {day:1,title:"Arrival & North Goa Beaches",activities:"Check in at Calangute • Explore Baga Beach & water sports • Sunset at Anjuna flea market"},
+    {day:2,title:"Heritage & Old Goa",activities:"Visit Basilica of Bom Jesus • Explore Se Cathedral • Spice plantation tour in Ponda"},
+    {day:3,title:"South Goa Tranquility",activities:"Colva Beach morning walk • Cabo de Rama fort ruins • Benaulim seafood lunch"},
+    {day:4,title:"Adventure Day",activities:"Dudhsagar waterfall trek • Backwater kayaking • Night cruise on Mandovi River"},
+    {day:5,title:"Relaxation & Departure",activities:"Yoga at Arambol Beach • Souvenirs at Mapusa market • Depart with memories"}
+  ],
+  2: [ // Manali
+    {day:1,title:"Arrival & Mall Road",activities:"Arrive Manali, check in • Evening at Mall Road • Hadimba Temple visit"},
+    {day:2,title:"Solang Valley Adventure",activities:"Solang Valley snow activities • Zorbing & cable car • Bonfire at camp"},
+    {day:3,title:"Rohtang Pass",activities:"Early start to Rohtang Pass (permit required) • Snow play & photography • Return by evening"},
+    {day:4,title:"Old Manali & Kullu",activities:"Explore Old Manali cafes • Vashisht hot springs • Kullu Shawl factory visit"},
+    {day:5,title:"River Rafting & Farewell",activities:"Beas River rafting • Trek to Jogini Waterfall • Depart Manali"}
+  ],
+  3: [ // Jaipur
+    {day:1,title:"Arrival & Pink City",activities:"Check in at heritage hotel • Hawa Mahal photography • Johari Bazaar evening walk"},
+    {day:2,title:"Amer Fort & Palaces",activities:"Amer Fort elephant ride • Sheesh Mahal mirror palace • City Palace museum"},
+    {day:3,title:"Jaigarh & Nahargarh",activities:"Jaigarh Fort cannons • Nahargarh sunset point • Block printing workshop"},
+    {day:4,title:"Stepwells & Markets",activities:"Chand Baori stepwell • Albert Hall Museum • Blue Pottery shopping"},
+    {day:5,title:"Outskirts & Departure",activities:"Galta Ji monkey temple • Jantar Mantar observatory • Depart Jaipur"}
+  ],
+  4: [ // Ladakh
+    {day:1,title:"Arrival & Acclimatisation",activities:"Land at Leh (3500m) • Rest mandatory • Evening at Leh Palace"},
+    {day:2,title:"Leh Monasteries",activities:"Thiksey Monastery sunrise • Hemis Monastery • Shey Palace ruins"},
+    {day:3,title:"Pangong Lake",activities:"Drive to Pangong Tso • Camp at lakeshore • Sunset at blue-salt lake"},
+    {day:4,title:"Nubra Valley",activities:"Cross Khardung La pass • Nubra sand dunes • Bactrian camel safari"},
+    {day:5,title:"Magnetic Hill & Farewell",activities:"Magnetic Hill illusion • Gurudwara Pathar Sahib • Depart Leh"}
+  ],
+  5: [ // Kerala
+    {day:1,title:"Arrival in Kochi",activities:"Fort Kochi Chinese fishing nets • Mattancherry spice market • Kathakali performance"},
+    {day:2,title:"Munnar Tea Hills",activities:"Drive to Munnar • Tea estate factory tour • Eravikulam National Park"},
+    {day:3,title:"Alleppey Backwaters",activities:"Check in on houseboat • Backwater cruise through villages • Sunset on water"},
+    {day:4,title:"Kovalam Beach",activities:"Drive to Kovalam • Lighthouse beach swim • Ayurvedic massage session"},
+    {day:5,title:"Trivandrum & Departure",activities:"Padmanabhaswamy Temple • Napier Museum • Depart Kerala"}
+  ],
+  6: [ // Rishikesh
+    {day:1,title:"Arrival & Lakshman Jhula",activities:"Arrive Rishikesh • Lakshman Jhula walk • Ganga Aarti at Triveni Ghat"},
+    {day:2,title:"Rafting Adventure",activities:"White water rafting Grade 3-4 • Cliff jumping at Shivpuri • Beach camping"},
+    {day:3,title:"Yoga & Wellness",activities:"Sunrise yoga class • Parmarth Niketan ashram visit • Meditation session"},
+    {day:4,title:"Trekking",activities:"Kunjapuri Devi trek (sunrise) • Rajaji National Park safari • Beatles Ashram ruins"},
+    {day:5,title:"Bungee & Farewell",activities:"Bungee jumping at Mohanchatti • Hot spring dip • Depart Rishikesh"}
+  ],
+  7: [ // Andaman
+    {day:1,title:"Port Blair Arrival",activities:"Cellular Jail tour & Light Show • Corbyn's Cove Beach • Marina Park"},
+    {day:2,title:"Havelock Island",activities:"Ferry to Havelock • Radhanagar Beach (Asia's best) • Snorkeling at Elephant Beach"},
+    {day:3,title:"Neil Island",activities:"Ferry to Neil Island • Laxmanpur Beach sunset • Natural Bridge rock formation"},
+    {day:4,title:"Scuba Diving",activities:"Certified scuba dive at North Bay • Jolly Buoy Island coral reef • Glass boat ride"},
+    {day:5,title:"Ross Island & Departure",activities:"Ross Island ruins • Viper Island • Depart Port Blair"}
+  ],
+  8: [ // Udaipur
+    {day:1,title:"City Palace & Lake",activities:"City Palace museum • Boat ride on Lake Pichola • Jag Mandir island visit"},
+    {day:2,title:"Temples & Crafts",activities:"Jagdish Temple • Saheliyon ki Bari gardens • Shilpgram crafts village"},
+    {day:3,title:"Chittorgarh Day Trip",activities:"Drive to Chittorgarh Fort • Padmini Palace & Vijay Stambha • Return by evening"},
+    {day:4,title:"Monsoon Palace & Bazaars",activities:"Sajjangarh Monsoon Palace sunset • Hathi Pol market • Silver jewellery shopping"},
+    {day:5,title:"Kumbhalgarh & Farewell",activities:"Kumbhalgarh Fort great wall • Ranakpur Jain Temples • Depart Udaipur"}
+  ],
+  9: [ // Dubai
+    {day:1,title:"Modern Dubai",activities:"Burj Khalifa At The Top observation deck • Dubai Mall & fountain show • Downtown dinner"},
+    {day:2,title:"Desert Safari",activities:"Morning dune bashing • Camel riding & sandboarding • Bedouin camp BBQ dinner"},
+    {day:3,title:"Old Dubai & Gold Souk",activities:"Gold Souk & Spice Souk • Abra ride across Dubai Creek • Al Fahidi historic district"},
+    {day:4,title:"Palm & Marina",activities:"Palm Jumeirah walk • Atlantis Aquaventure water park • Dubai Marina sunset dinner"},
+    {day:5,title:"Shopping & Departure",activities:"Dubai Frame photo stop • Mall of the Emirates ski slope • Depart Dubai"}
+  ],
+  10: [ // Paris
+    {day:1,title:"Iconic Paris",activities:"Eiffel Tower summit visit • Seine River cruise • Champs-Élysées evening stroll"},
+    {day:2,title:"Art & Culture",activities:"Louvre Museum (Mona Lisa, Venus de Milo) • Tuileries Garden picnic • Musée d'Orsay"},
+    {day:3,title:"Montmartre & Sacré-Cœur",activities:"Sacré-Cœur Basilica • Montmartre artist studios • Moulin Rouge show evening"},
+    {day:4,title:"Versailles Day Trip",activities:"Palace of Versailles gardens • Hall of Mirrors • Trianon palaces walk"},
+    {day:5,title:"Hidden Paris & Farewell",activities:"Le Marais district walk • Sainte-Chapelle stained glass • Departure from CDG"}
+  ],
+  11: [ // Bali
+    {day:1,title:"Arrival in Ubud",activities:"Tegallalang rice terrace sunrise • Ubud Monkey Forest • Traditional Kecak dance"},
+    {day:2,title:"Temples & Volcanoes",activities:"Mount Batur sunrise trek • Tirta Empul holy water temple • Besakih Mother Temple"},
+    {day:3,title:"Seminyak Beach",activities:"Drive to Seminyak • Tanah Lot sea temple sunset • Beach club evening"},
+    {day:4,title:"Nusa Penida Island",activities:"Ferry to Nusa Penida • Kelingking Cliff dinosaur head view • Crystal Bay snorkeling"},
+    {day:5,title:"Spa & Farewell",activities:"Traditional Balinese massage • Cooking class in Ubud • Depart Bali"}
+  ],
+  12: [ // Tokyo
+    {day:1,title:"Shinjuku & Shibuya",activities:"Shibuya Crossing scramble • Shinjuku Gyoen garden • Golden Gai alley bar-hop"},
+    {day:2,title:"Asakusa & Akihabara",activities:"Senso-ji Temple morning • Nakamise Street shopping • Akihabara electronics district"},
+    {day:3,title:"Harajuku & Omotesando",activities:"Meiji Shrine forest walk • Harajuku Takeshita Street • Omotesando luxury boutiques"},
+    {day:4,title:"Day Trip to Nikko or Kamakura",activities:"Kamakura Giant Buddha • Tsurugaoka Hachimangu shrine • Bamboo grove at Hokokuji"},
+    {day:5,title:"Tsukiji & TeamLab",activities:"Tsukiji Outer Market breakfast • TeamLab Borderless digital art • Depart Tokyo"}
+  ],
+  13: [ // Maldives
+    {day:1,title:"Arrival & Overwater Villa",activities:"Speedboat transfer to resort • Snorkel house reef • Sunset cocktails on deck"},
+    {day:2,title:"Diving & Dolphins",activities:"Scuba dive with manta rays • Dolphin watching cruise • Underwater restaurant dinner"},
+    {day:3,title:"Island Hopping",activities:"Local island village visit • Sandbank picnic setup • Bioluminescent beach walk at night"},
+    {day:4,title:"Water Sports",activities:"Kitesurfing lesson • Submarine tour • Spa with ocean view"},
+    {day:5,title:"Sunrise & Farewell",activities:"Sunrise kayak • Reef fishing trip • Seaplane departure"}
+  ],
+  14: [ // Singapore
+    {day:1,title:"Marina Bay & Gardens",activities:"Gardens by the Bay supertree show • Marina Bay Sands infinity pool • Merlion Park"},
+    {day:2,title:"Sentosa Island",activities:"Universal Studios Singapore • S.E.A. Aquarium • Wings of Time beach show"},
+    {day:3,title:"Cultural Districts",activities:"Chinatown Buddha Tooth Temple • Little India flower garlands • Arab Street Kampong Glam"},
+    {day:4,title:"Nature & Zoo",activities:"Singapore Zoo night safari • Jurong Bird Park • Botanical Gardens UNESCO walk"},
+    {day:5,title:"Shopping & Departure",activities:"Orchard Road shopping • Clarke Quay lunch • Depart via Changi Airport"}
+  ],
+  15: [ // Hampi
+    {day:1,title:"Arrival & Virupaksha",activities:"Virupaksha Temple evening aarti • Hampi Bazaar ruins walk • Sunset at Matanga Hill"},
+    {day:2,title:"Royal Enclosure",activities:"Lotus Mahal & Elephant Stables • Hazara Rama Temple carvings • Underground Shiva Temple"},
+    {day:3,title:"Vittala Temple",activities:"Vittala Temple stone chariot • Musical pillars • Achyutaraya Temple ruins"},
+    {day:4,title:"Tungabhadra & Villages",activities:"Coracle ride on Tungabhadra • Anegundi village walk • Kishkindha heritage sites"},
+    {day:5,title:"Farewell to Ruins",activities:"Hemakuta Hill sunrise • Sasivekalu Ganesha • Depart Hampi"}
+  ],
+  16: [ // Coorg
+    {day:1,title:"Arrival & Coffee Estates",activities:"Check in at plantation stay • Coffee estate guided walk • Madikeri town evening"},
+    {day:2,title:"Abbey Falls & Fort",activities:"Abbey Falls morning visit • Madikeri Fort museum • Omkareshwara Temple"},
+    {day:3,title:"Iruppu Falls Trek",activities:"Iruppu waterfall hike • Nagarhole National Park safari • Bonfire dinner"},
+    {day:4,title:"Talakaveri & Bhagamandala",activities:"Talakaveri source of Kaveri • Bhagamandala confluence • Nisargadhama island forest"},
+    {day:5,title:"Tea, Honey & Farewell",activities:"Honey bee farm tour • Spice garden shopping • Depart Coorg"}
+  ],
+  17: [ // Varanasi
+    {day:1,title:"Arrival & Ganga Aarti",activities:"Dashashwamedh Ghat Ganga Aarti • Boat ride at dusk • Old city alley walk"},
+    {day:2,title:"Dawn on the Ghats",activities:"Sunrise boat ride across 84 ghats • Manikarnika burning ghat • Kashi Vishwanath Temple"},
+    {day:3,title:"Sarnath",activities:"Sarnath deer park where Buddha preached • Dhamek Stupa • Sarnath Museum"},
+    {day:4,title:"Crafts & Silk",activities:"Banarasi silk weaving workshop • Banaras Hindu University campus • Ramnagar Fort"},
+    {day:5,title:"Final Puja & Farewell",activities:"Dawn puja at Assi Ghat • Lassi & kachori breakfast • Depart Varanasi"}
+  ],
+  18: [ // Shimla
+    {day:1,title:"Arrival & Mall Road",activities:"The Ridge & Christ Church • Mall Road stroll • Lakkar Bazaar handicrafts"},
+    {day:2,title:"Jakhu Temple & Kufri",activities:"Jakhu Hanuman Temple trek • Kufri snow point • Himalayan Nature Park"},
+    {day:3,title:"Toy Train to Kalka",activities:"UNESCO Kalka–Shimla toy train ride • Barog tunnel photo stop • Chail Palace detour"},
+    {day:4,title:"Narkanda & Hatu Peak",activities:"Hatu Peak trek (highest around Shimla) • Apple orchards walk • Tattapani hot springs"},
+    {day:5,title:"Chadwick Falls & Farewell",activities:"Chadwick waterfall hike • Glen forest walk • Depart Shimla"}
+  ],
+  19: [ // New York
+    {day:1,title:"Manhattan Icons",activities:"Statue of Liberty & Ellis Island ferry • One World Observatory • Times Square evening"},
+    {day:2,title:"Central Park & Museums",activities:"Central Park morning jog • Metropolitan Museum of Art • Fifth Avenue shopping"},
+    {day:3,title:"Brooklyn & DUMBO",activities:"Brooklyn Bridge walk • DUMBO neighbourhood • Brooklyn Museum"},
+    {day:4,title:"The High Line & Chelsea",activities:"High Line elevated park • Chelsea Market food hall • Whitney Museum of American Art"},
+    {day:5,title:"Harlem & Departure",activities:"Harlem gospel brunch • Apollo Theater exterior • JFK departure"}
+  ],
+  20: [ // London
+    {day:1,title:"Royal London",activities:"Buckingham Palace changing of guard • St James's Park • Westminster Abbey"},
+    {day:2,title:"History & Culture",activities:"Tower of London Crown Jewels • Tower Bridge glass floor • Borough Market lunch"},
+    {day:3,title:"Museums & Hyde Park",activities:"British Museum Rosetta Stone • Hyde Park & Serpentine Gallery • Covent Garden evening"},
+    {day:4,title:"Notting Hill & Camden",activities:"Portobello Road antiques market • Notting Hill colourful houses • Camden Lock street food"},
+    {day:5,title:"Greenwich & Farewell",activities:"Greenwich Meridian Line & Observatory • National Maritime Museum • Heathrow departure"}
+  ],
+  21: [ // Bangkok
+    {day:1,title:"Temples & Grand Palace",activities:"Grand Palace & Wat Phra Kaew • Wat Pho reclining Buddha • Wat Arun river crossing"},
+    {day:2,title:"Markets & Canals",activities:"Damnoen Saduak floating market • Chatuchak Weekend Market • Khlong boat tour"},
+    {day:3,title:"Street Food Safari",activities:"Chinatown Yaowarat night market • Pad Thai cooking class • Asiatique riverside mall"},
+    {day:4,title:"Day Trip to Ayutthaya",activities:"Ayutthaya ancient capital ruins • Wat Mahathat headless Buddha • Elephant sanctuary"},
+    {day:5,title:"Sky Bars & Departure",activities:"Lumphini Park morning • Vertigo rooftop bar view • Depart Suvarnabhumi"}
+  ],
+  22: [ // Rome
+    {day:1,title:"Ancient Rome",activities:"Colosseum arena floor • Roman Forum ruins • Palatine Hill views"},
+    {day:2,title:"Vatican City",activities:"St Peter's Basilica dome climb • Vatican Museums & Sistine Chapel • Castel Sant'Angelo"},
+    {day:3,title:"Baroque Rome",activities:"Trevi Fountain coin toss • Spanish Steps • Pantheon oculus rain trick"},
+    {day:4,title:"Trastevere & Campo de' Fiori",activities:"Trastevere neighbourhood walk • Campo de' Fiori market • Piazza Navona street art"},
+    {day:5,title:"Ostia Antica & Farewell",activities:"Ostia Antica ancient port ruins • Testaccio food market • Depart Fiumicino"}
+  ],
+  23: [ // Pondicherry
+    {day:1,title:"French Quarter Charm",activities:"White Town heritage walk • Promenade Beach sunrise • French bakery breakfast"},
+    {day:2,title:"Auroville",activities:"Auroville Matrimandir meditation • Visitor centre documentary • Organic farm lunch"},
+    {day:3,title:"Temples & Ashram",activities:"Sri Aurobindo Ashram • Manakula Vinayagar Temple elephant • Rock Beach sunset"},
+    {day:4,title:"Coastal Villages",activities:"Serenity Beach surfing lesson • Chunnambar backwater boat • Paradise Beach picnic"},
+    {day:5,title:"Cafés & Farewell",activities:"Le Club colonial brunch • Paradise Estate shopping • Depart Pondicherry"}
+  ],
+  24: [ // Spiti Valley
+    {day:1,title:"Arrival in Kaza",activities:"Arrive Kaza (3800m), acclimatise • Key Monastery visit • Local market stroll"},
+    {day:2,title:"Hikkim & Komic Villages",activities:"Hikkim highest post office • Komic highest motorable village • Langza fossil village"},
+    {day:3,title:"Chandratal Lake",activities:"Drive to Chandratal (Moon Lake) • Campsite at 4300m • Milky Way night sky"},
+    {day:4,title:"Pin Valley",activities:"Pin Valley National Park • Snow leopard tracker guide • Mud village walk"},
+    {day:5,title:"Dhankar & Farewell",activities:"Dhankar Monastery cliff walk • Dhankar Lake trek • Depart Spiti Valley"}
+  ],
+  25: [ // Sydney
+    {day:1,title:"Harbour Icons",activities:"Sydney Opera House guided tour • Harbour Bridge climb • The Rocks heritage precinct"},
+    {day:2,title:"Bondi Beach",activities:"Bondi to Coogee coastal walk • Bondi Beach surf lesson • Bronte baths swim"},
+    {day:3,title:"Blue Mountains",activities:"Three Sisters rock formation • Scenic World cable car • Wentworth Falls hike"},
+    {day:4,title:"Darling Harbour & Zoo",activities:"Taronga Zoo ferry • Wild Life Sydney aquarium • Darling Harbour evening"},
+    {day:5,title:"Manly & Farewell",activities:"Manly Ferry scenic ride • Manly Beach walk • Depart Sydney"}
+  ],
+  26: [ // Cape Town
+    {day:1,title:"Table Mountain",activities:"Table Mountain cable car sunrise • Signal Hill sunset • Boulders Beach penguins"},
+    {day:2,title:"Cape Peninsula",activities:"Cape Point lighthouse • Cape of Good Hope • Hout Bay seal island boat"},
+    {day:3,title:"Winelands",activities:"Stellenbosch wine tasting • Franschhoek wine tram • Cape Dutch architecture"},
+    {day:4,title:"Robben Island",activities:"Robben Island Nelson Mandela prison • V&A Waterfront lunch • Two Oceans Aquarium"},
+    {day:5,title:"Bo-Kaap & Farewell",activities:"Bo-Kaap colourful houses • Long Street cafés • Depart Cape Town"}
+  ],
+  27: [ // Mysore
+    {day:1,title:"Mysore Palace",activities:"Mysore Palace night illumination • Devaraja Market spices • Chamundi Hill temple"},
+    {day:2,title:"Art & Silk",activities:"Government Silk Weaving Factory • Mysore painting workshop • Jaganmohan Palace art gallery"},
+    {day:3,title:"Srirangapatna",activities:"Tipu Sultan's Summer Palace • Ranganathittu Bird Sanctuary boat • Brindavan Gardens"},
+    {day:4,title:"Nagarhole Safari",activities:"Kabini river safari (elephant, tiger) • Jungle lodge bonfire • Bird watching walk"},
+    {day:5,title:"Somnathpur & Farewell",activities:"Somnathpur Hoysala temple carvings • Mysore Pak sweet shop • Depart Mysore"}
+  ],
+  28: [ // Ooty
+    {day:1,title:"Arrival & Rose Garden",activities:"Government Rose Garden • Ooty Botanical Gardens • Lake boating evening"},
+    {day:2,title:"Nilgiri Toy Train",activities:"UNESCO Nilgiri Mountain Railway ride • Coonoor & Sim's Park • Wellington Barracks"},
+    {day:3,title:"Doddabetta Peak",activities:"Doddabetta highest Nilgiris summit • Tea Museum • Ooty Tea Factory visit"},
+    {day:4,title:"Mudumalai Safari",activities:"Mudumalai Wildlife Sanctuary jeep safari • Elephant camp • Tribal village walk"},
+    {day:5,title:"Waterfalls & Farewell",activities:"Pykara waterfall & lake • Emerald Lake drive • Depart Ooty"}
+  ],
+  29: [ // Barcelona
+    {day:1,title:"Gaudí Masterpieces",activities:"Sagrada Família interior • Park Güell mosaic terrace • Casa Batlló facade light"},
+    {day:2,title:"Gothic Quarter",activities:"Barcelona Cathedral roof • El Born neighbourhood • Picasso Museum"},
+    {day:3,title:"Barceloneta Beach",activities:"Barceloneta Beach morning swim • Mercado de La Boqueria • Las Ramblas people watch"},
+    {day:4,title:"Montjuïc & Tibidabo",activities:"Montjuïc Castle cable car • Olympic Stadium • Tibidabo amusement park views"},
+    {day:5,title:"El Raval & Farewell",activities:"MACBA contemporary art • Palau de la Música concert hall • Depart Barcelona"}
+  ],
+  30: [ // Iceland
+    {day:1,title:"Reykjavík & Blue Lagoon",activities:"Blue Lagoon geothermal spa • Hallgrímskirkja church tower • Harpa Concert Hall"},
+    {day:2,title:"Golden Circle",activities:"Þingvellir tectonic plates walk • Geysir hot spring eruptions • Gullfoss waterfall"},
+    {day:3,title:"South Coast",activities:"Seljalandsfoss waterfall walk-behind • Skógafoss rainbow • Reynisfjara black sand beach"},
+    {day:4,title:"Jökulsárlón Glacier",activities:"Jökulsárlón glacier lagoon boat • Diamond Beach ice chunks • Vatnajökull ice cave"},
+    {day:5,title:"Northern Lights & Farewell",activities:"Snæfellsjökull peninsula drive • Aurora hunting at night • Depart Reykjavík"}
+  ],
+  31: [ // Darjeeling
+    {day:1,title:"Tiger Hill Sunrise",activities:"Tiger Hill Kanchenjunga sunrise (3am) • Batasia Loop toy train loop • Peace Pagoda"},
+    {day:2,title:"Tea Gardens",activities:"Happy Valley Tea Estate tour • Darjeeling Himalayan Railway UNESCO • Chowrasta Mall"},
+    {day:3,title:"Monasteries",activities:"Ghoom Monastery oldest in Darjeeling • Tibetan Refugee Centre • Observatory Hill"},
+    {day:4,title:"Mirik Lake",activities:"Mirik Lake rowboat • Orange orchards walk • India-Nepal border viewpoint"},
+    {day:5,title:"Peshok & Farewell",activities:"Peshok Tea Estate walk • Rock Garden • Depart Darjeeling"}
+  ],
+  32: [ // Amritsar
+    {day:1,title:"Golden Temple",activities:"Golden Temple Harmandir Sahib dawn visit • Langar community meal • Jallianwala Bagh"},
+    {day:2,title:"Wagah Border",activities:"Wagah Border flag lowering ceremony • Attari market • Partition Museum"},
+    {day:3,title:"Heritage Havelis",activities:"Gobindgarh Fort laser show • Haveli Dharampura bazaar • Kesar da Dhaba dinner"},
+    {day:4,title:"Durgiana Temple & Mall",activities:"Durgiana Temple • Ram Bagh gardens • Lawrence Road shopping"},
+    {day:5,title:"Golden Temple Dawn & Farewell",activities:"Pre-dawn sarovar dip ritual • Punjabi breakfast • Depart Amritsar"}
+  ],
+  33: [ // Seoul
+    {day:1,title:"K-Pop & Gangnam",activities:"COEX Starfield Library selfie • SM Town museum • Gangnam district walk"},
+    {day:2,title:"Palaces & Hanbok",activities:"Gyeongbokgung Palace hanbok rental • Bukchon Hanok Village alleys • Insadong tea street"},
+    {day:3,title:"Namsan Tower",activities:"N Seoul Tower love locks • Myeongdong street food & skincare • Dongdaemun night market"},
+    {day:4,title:"DMZ Day Trip",activities:"Korean Demilitarized Zone tour • Third Tunnel infiltration • Dorasan Station"},
+    {day:5,title:"Hongdae & Farewell",activities:"Hongdae street performances • Lotte Duty Free shopping • Depart Incheon"}
+  ],
+  34: [ // Zurich
+    {day:1,title:"Old Town & Lake",activities:"Grossmünster cathedral towers • Bahnhofstrasse luxury shopping • Lake Zurich paddle"},
+    {day:2,title:"Lucerne Day Trip",activities:"Lucerne Chapel Bridge • Lion Monument • Mount Pilatus cogwheel railway"},
+    {day:3,title:"Jungfraujoch",activities:"Jungfraujoch Top of Europe (3454m) • Aletsch Glacier walk • Grindelwald village"},
+    {day:4,title:"Art & Fondue",activities:"Kunsthaus art museum • Zurich West brewery district • Traditional cheese fondue dinner"},
+    {day:5,title:"Rhine Falls & Farewell",activities:"Rhine Falls boat spray • Schaffhausen old town • Depart Zurich"}
+  ],
+  35: [ // Kodaikanal
+    {day:1,title:"Lake & Coaker's Walk",activities:"Kodaikanal Lake rowboat • Coaker's Walk misty views • Bryant Park flowers"},
+    {day:2,title:"Waterfalls",activities:"Silver Cascade Falls • Bear Shola Falls • Fairy Falls trek"},
+    {day:3,title:"Pillar Rocks & Pine Forest",activities:"Pillar Rocks viewpoint • Pine Forest cycling • Berijam Lake permit zone"},
+    {day:4,title:"Kukkal Caves Trek",activities:"Kukkal Caves hike • Palani Hills trek • Tribal village interaction"},
+    {day:5,title:"Dolphin's Nose & Farewell",activities:"Dolphin's Nose rock viewpoint • Homemade chocolate shopping • Depart Kodaikanal"}
+  ],
+  36: [ // Gokarna
+    {day:1,title:"Arrival & Om Beach",activities:"Om Beach sunset • Mahabaleshwar Temple evening puja • Namaste Café dinner"},
+    {day:2,title:"Beach Hopping Trek",activities:"Half Moon Beach via cliff path • Paradise Beach boat • Kudle Beach bonfire"},
+    {day:3,title:"Mirjan Fort",activities:"Mirjan Fort ruins jungle trek • Yana Rocks caves hike • River kayaking"},
+    {day:4,title:"Murudeshwar Day Trip",activities:"Murudeshwar giant Shiva statue • Underwater dive at Netrani Island • Temple tower climb"},
+    {day:5,title:"Sunrise & Farewell",activities:"Om Beach sunrise yoga • Fresh fish breakfast • Depart Gokarna"}
+  ],
+  37: [ // Los Angeles
+    {day:1,title:"Hollywood & Griffith",activities:"Griffith Observatory city view • Hollywood Walk of Fame • TCL Chinese Theatre"},
+    {day:2,title:"Venice & Santa Monica",activities:"Venice Beach Boardwalk • Santa Monica Pier Ferris wheel • Route 66 end point"},
+    {day:3,title:"Universal Studios",activities:"Universal Studios Hollywood • Studio Tram Tour behind scenes • CityWalk evening"},
+    {day:4,title:"Beverly Hills & Getty",activities:"Rodeo Drive window shopping • Getty Center art & gardens • Sunset Strip evening"},
+    {day:5,title:"Malibu & Farewell",activities:"Malibu Pier sunrise • PCH scenic coastal drive • LAX departure"}
+  ],
+  38: [ // Berlin
+    {day:1,title:"Berlin Wall & Cold War",activities:"East Side Gallery murals • Checkpoint Charlie museum • Memorial to the Murdered Jews"},
+    {day:2,title:"Museum Island",activities:"Pergamon Museum Ishtar Gate • Neues Museum Nefertiti bust • Berlin Cathedral"},
+    {day:3,title:"Charlottenburg & Tiergarten",activities:"Charlottenburg Palace gardens • Victory Column Tiergarten • KaDeWe department store"},
+    {day:4,title:"Kreuzberg & Nightlife",activities:"Markthalle Neun food market • Tempelhof Field cycling • Kreuzberg club culture"},
+    {day:5,title:"Potsdam Day Trip & Farewell",activities:"Sanssouci Palace Versailles of Prussia • Dutch Quarter • Depart Berlin"}
+  ],
+  39: [ // Mahabaleshwar
+    {day:1,title:"Arrival & Strawberry Farm",activities:"Strawberry picking at farm • Mapro Garden • Mahabaleshwar Temple"},
+    {day:2,title:"Viewpoints",activities:"Arthur's Seat Queen of Points • Kate's Point valley view • Elephant's Head Point"},
+    {day:3,title:"Pratapgad Fort",activities:"Pratapgad Fort trek • Afzal Khan tomb • Lingmala Waterfall"},
+    {day:4,title:"Panchgani",activities:"Panchgani Table Land plateau • Sydney Point sunset • Devrai Art Village"},
+    {day:5,title:"Venna Lake & Farewell",activities:"Venna Lake horse riding • Local chikki & jam shopping • Depart Mahabaleshwar"}
+  ],
+  40: [ // Nainital
+    {day:1,title:"Arrival & Naini Lake",activities:"Naini Lake boat ride • Mall Road walk • Naina Devi Temple"},
+    {day:2,title:"Snow View & Tiffin Top",activities:"Snow View Point cable car • Tiffin Top Ayarpatta Hill trek • Dorothy's Seat viewpoint"},
+    {day:3,title:"Corbett Day Trip",activities:"Jim Corbett National Park jeep safari • Garjia Devi Temple • Corbett Falls"},
+    {day:4,title:"Mukteshwar",activities:"Mukteshwar peak Himalayan views • Chauli Ki Jali rock rappelling • Apple orchard walk"},
+    {day:5,title:"Eco Cave & Farewell",activities:"Eco Cave Gardens • Nainital Zoo • Depart Nainital"}
+  ],
+  41: [ // Venice
+    {day:1,title:"Arrival by Vaporetto",activities:"Grand Canal vaporetto arrival • Rialto Bridge • Evening passeggiata at Piazza San Marco"},
+    {day:2,title:"St Mark's Basilica",activities:"St Mark's Basilica golden mosaics • Doge's Palace Bridge of Sighs • Campanile tower"},
+    {day:3,title:"Gondola & Islands",activities:"Gondola serenade through secret canals • Murano glass factory • Burano lace & colours"},
+    {day:4,title:"Dorsoduro & Peggy",activities:"Peggy Guggenheim Collection • Accademia Bridge • Zattere waterfront sunset"},
+    {day:5,title:"Cannaregio & Farewell",activities:"Jewish Ghetto oldest in world • Ca' d'Oro facade • Depart Venice Santa Lucia"}
+  ],
+  42: [ // Phuket
+    {day:1,title:"Arrival & Patong",activities:"Patong Beach swim • Bangla Road evening walk • Seafood dinner at Banzaan Market"},
+    {day:2,title:"Phi Phi Islands",activities:"Speedboat to Phi Phi Islands • Maya Bay snorkelling • Monkey Beach"},
+    {day:3,title:"Old Phuket Town",activities:"Sino-Portuguese architecture walk • Phuket Weekend Market • Big Buddha viewpoint"},
+    {day:4,title:"Phang Nga Bay",activities:"James Bond Island sea kayak • Floating village • Mangrove tunnel paddle"},
+    {day:5,title:"Kata Beach & Farewell",activities:"Kata Beach sunrise yoga • Chalong Temple • Depart Phuket"}
+  ],
+  43: [ // Shillong
+    {day:1,title:"Arrival & Ward's Lake",activities:"Ward's Lake rowboat • Don Bosco Museum cultures of NE India • Police Bazaar evening"},
+    {day:2,title:"Cherrapunji",activities:"Nohkalikai Falls highest plunge fall • Mawsmai Cave • Seven Sisters Falls viewpoint"},
+    {day:3,title:"Living Root Bridges",activities:"Mawlynnong cleanest village Asia • Double Decker Living Root Bridge trek • Dawki river"},
+    {day:4,title:"Elephant Falls & Spread",activities:"Elephant Falls three-tier • Shillong Peak • Laitlum Grand Canyon"},
+    {day:5,title:"Umiam Lake & Farewell",activities:"Umiam Lake boat ride • Motphran local market • Depart Shillong"}
+  ],
+  44: [ // Tawang
+    {day:1,title:"Arrival & Tawang Monastery",activities:"Tawang Monastery largest India • Craft Centre • Tawang town walk"},
+    {day:2,title:"Sela Pass",activities:"Sela Pass 4170m frozen lake • Paradise Lake reflection • Jaswant Garh war memorial"},
+    {day:3,title:"Bumla Pass",activities:"Bumla Pass India-China border (permit) • Madhuri Lake rocky landscape • Snow-capped peak views"},
+    {day:4,title:"Nuranang Falls",activities:"Jung Waterfall Nuranang trek • Shonga-tser Lake Madhuri • Urgelling Birthplace Dalai Lama"},
+    {day:5,title:"PT Tso Lake & Farewell",activities:"PT Tso sunrise high-altitude lake • Local weaving village • Depart Tawang"}
+  ],
+  45: [ // Amsterdam
+    {day:1,title:"Canals & Anne Frank",activities:"Anne Frank House hidden annex • Jordaan neighbourhood canal walk • Heineken Experience"},
+    {day:2,title:"Museum Quarter",activities:"Rijksmuseum Night Watch • Van Gogh Museum self-portraits • Vondelpark cycling"},
+    {day:3,title:"Day Trip to Bruges",activities:"Bruges medieval old town • Belfry tower climb • Belgian waffles & chocolates"},
+    {day:4,title:"Keukenhof & Tulips",activities:"Keukenhof tulip garden seasonal • Zaanse Schans windmills • Wooden clog workshop"},
+    {day:5,title:"Houseboat & Farewell",activities:"Houseboat Museum tour • Albert Cuyp Market street food • Depart Schiphol"}
+  ],
+  46: [ // Dubai Desert
+    {day:1,title:"Desert Safari",activities:"Dune bashing in 4x4 • Sandboarding at dusk • Bedouin camp dinner with belly dance"},
+    {day:2,title:"Camel & Falconry",activities:"Camel farm morning ride • Falconry display • Al Marmoom camel racing track"},
+    {day:3,title:"Hot Air Balloon",activities:"Hot air balloon over desert sunrise • Quad biking • Stargazing with guide"},
+    {day:4,title:"Al Ain Oasis",activities:"Al Ain Oasis UNESCO falaj irrigation • Al Ain Palace Museum • Jebel Hafeet mountain road"},
+    {day:5,title:"Liwa Oasis & Farewell",activities:"Liwa Moreeb Dune tallest in UAE • Empty Quarter infinity view • Depart Abu Dhabi"}
+  ],
+  47: [ // Kasol
+    {day:1,title:"Arrival & Parvati River",activities:"Arrive Kasol • Parvati River bank evening • Kasol Cafe Israeli food"},
+    {day:2,title:"Kheerganga Trek",activities:"Kheerganga hot spring trek (12km) • Rudra Nag waterfall • Camp at top"},
+    {day:3,title:"Manikaran",activities:"Manikaran Sahib Gurudwara hot spring • Shiva Temple • Parvati Valley walk"},
+    {day:4,title:"Tosh Village",activities:"Tosh village trek • Tosh Fort ruins • Sunset at high Himalayan meadow"},
+    {day:5,title:"Pulga & Farewell",activities:"Pulga hidden village hike • Kalga meadows • Depart Kasol"}
+  ],
+  48: [ // Ziro Valley
+    {day:1,title:"Arrival & Apatani Village",activities:"Apatani tribal village walk • Paddy-fish culture fields • Hong village community"},
+    {day:2,title:"Ziro Music Festival (if season)",activities:"Ziro Music Festival grounds • Talley Valley Wildlife Sanctuary • Bamboo groves walk"},
+    {day:3,title:"Dolo Mando Hill",activities:"Dolo Mando Hill sunrise panorama • Siiro village nose plug tradition • Pine forests"},
+    {day:4,title:"Meghna Cave Temple",activities:"Meghna Cave Temple trek • Shiva Lingam natural cave • Pange village weaving"},
+    {day:5,title:"Kile Pakho & Farewell",activities:"Kile Pakho viewpoint highest • Paddy field photography • Depart Ziro"}
+  ],
+  49: [ // Prague
+    {day:1,title:"Old Town & Astronomical Clock",activities:"Old Town Square Astronomical Clock hour-chime • Charles Bridge statues • Josefov Jewish Quarter"},
+    {day:2,title:"Prague Castle",activities:"Prague Castle St Vitus Cathedral stained glass • Golden Lane tiny houses • Lobkowicz Palace"},
+    {day:3,title:"Vinohrady & Žižkov",activities:"Žižkov TV Tower giant babies • Vítkov National Memorial • Vinohrady wine bar"},
+    {day:4,title:"Day Trip to Kutná Hora",activities:"Sedlec Ossuary bone church • St Barbara's Cathedral Gothic • Kutná Hora town"},
+    {day:5,title:"Malá Strana & Farewell",activities:"Malá Strana Baroque gardens • Petřín Hill funicular • Depart Václav Havel Airport"}
+  ],
+  50: [ // Santorini
+    {day:1,title:"Oia Sunset",activities:"Oia village sunset (arrive early for spot) • Blue dome church photos • Sunset wine bar"},
+    {day:2,title:"Caldera Boat Tour",activities:"Caldera catamaran cruise • Hot Springs volcanic swim • Red & White Beach snorkelling"},
+    {day:3,title:"Fira & Ancient Akrotiri",activities:"Fira town cable car • Akrotiri Minoan excavation site • Museum of Prehistoric Thera"},
+    {day:4,title:"Perissa Black Beach",activities:"Perissa black sand beach swim • Profitis Ilias mountain hike • Megalochori village wine"},
+    {day:5,title:"Imerovigli & Farewell",activities:"Imerovigli Skaros rock sunrise • Athinios port scenic • Depart Santorini"}
+  ],
+  51: [ // Lucknow
+    {day:1,title:"Nawabi Heritage",activities:"Bara Imambara & Bhul Bhuliya labyrinth • Rumi Darwaza gateway • Husainabad Imambara"},
+    {day:2,title:"Colonial & Gardens",activities:"British Residency ruins & museum • Hazratganj boulevard • Begum Hazrat Mahal Park"},
+    {day:3,title:"Food Trail",activities:"Tunday Kababi galouti kebab • Chaat gali at Akbari Gate • Basket chaat Lalla's"},
+    {day:4,title:"Crafts & Chikankari",activities:"Chikankari embroidery workshop • Zardozi work artisans • Janpath Market shopping"},
+    {day:5,title:"Ambedkar Park & Farewell",activities:"Dr Ambedkar Memorial Park • Buddha Park • Depart Lucknow"}
+  ],
+  52: [ // Chandrashila
+    {day:1,title:"Arrive Chopta",activities:"Drive to Chopta (base camp) • Tungnath meadow walk • Camp setup"},
+    {day:2,title:"Tungnath Temple",activities:"Tungnath highest Shiva temple trek (3.5km) • Chandrashila summit (4000m) • 360° Himalaya view"},
+    {day:3,title:"Deoria Tal",activities:"Deoria Tal (Chandra Lake) reflection trek • Sari village • Kedarnath peaks view"},
+    {day:4,title:"Dugalbitta & Forest",activities:"Dugalbitta meadows walk • Bugyals rhododendron trails • Binocular bird watching"},
+    {day:5,title:"Ukhimath & Farewell",activities:"Ukhimath Temple (winter Kedarnath) • Augustmuni valley views • Depart Uttarakhand"}
+  ],
+  53: [ // Statue of Unity
+    {day:1,title:"Statue of Unity",activities:"Statue of Unity Valley of Flowers • Observation deck 153m • Sardar Sarovar Dam walk"},
+    {day:2,title:"Light & Sound Show",activities:"Laser light show at statue evening • Ekta Nursery flower park • Tent City riverside stay"},
+    {day:3,title:"Jungle Safari",activities:"Jungle Safari Zone deer & leopard • Cactus Garden unique species • Children's Nutrition Park"},
+    {day:4,title:"Vadodara Day Trip",activities:"Laxmi Vilas Palace largest private palace • Baroda Museum • Sayaji Bagh"},
+    {day:5,title:"Pavagadh & Farewell",activities:"Pavagadh Hill UNESCO ropeway • Champaner-Pavagadh Archaeological Park • Depart Vadodara"}
+  ],
+  54: [ // Rann of Kutch
+    {day:1,title:"Arrival & White Rann",activities:"Great Rann of Kutch salt desert walk • Sunset over white horizon • Rann Utsav tent city"},
+    {day:2,title:"Kala Dungar",activities:"Kala Dungar highest point Gujarat • Sunset over Rann panorama • Fox Feeding site"},
+    {day:3,title:"Kutch Craft Villages",activities:"Nirona village lacquerware & Rogan art • Hodka village bhunga mud hut stay • Craft fair"},
+    {day:4,title:"Wild Ass Sanctuary",activities:"Indian Wild Ass Sanctuary jeep • Little Rann of Kutch • Flamingo waterpond"},
+    {day:5,title:"Bhuj & Farewell",activities:"Bhuj Aina Mahal Palace mirrors • Kutch Museum • Depart Bhuj"}
+  ],
+  55: [ // Dwarka
+    {day:1,title:"Arrival & Dwarkadhish",activities:"Dwarkadhish Temple evening aarti • Gomati Ghat rituals • Sudama Setu bridge walk"},
+    {day:2,title:"Bet Dwarka",activities:"Bet Dwarka island ferry • Shankhodhar Temple • Coral reef snorkelling"},
+    {day:3,title:"Nageshwar & Rukmini",activities:"Nageshwar Jyotirlinga temple • Rukmini Devi Temple • Gopi Talav lake"},
+    {day:4,title:"Somnath Day Trip",activities:"Somnath Jyotirlinga temple • Light & Sound show • Triveni Sangam shore"},
+    {day:5,title:"Morning Puja & Farewell",activities:"Sunrise Gomati Ghat puja • Dwarkadhish final darshan • Depart Dwarka"}
+  ]
+};
+
+const destinations = [
+  {id:1,name:"Goa",location:"India",type:"Leisure",budget:"Medium",tripType:"Domestic",description:"Famous for beaches and nightlife",image:"https://voiceofadventure.com/wp-content/uploads/2022/06/60d0813807aff-Baga_Beach_In_Goa.jpg"},
+  {id:2,name:"Manali",location:"India",type:"Adventure",budget:"Low",tripType:"Domestic",description:"Mountains and snow activities",image:"https://cdn1.tripoto.com/media/filter/tst/img/1429685/Image/1581687460_4manali.jpg"},
+  {id:3,name:"Jaipur",location:"India",type:"Cultural",budget:"Low",tripType:"Domestic",description:"Palaces and royal heritage",image:"https://www.jaipurlove.com/wp-content/uploads/2018/03/jaipur-hawa-mahal-india.jpg"},
+  {id:4,name:"Ladakh",location:"India",type:"Adventure",budget:"High",tripType:"Domestic",description:"High-altitude desert and bike trips",image:"https://www.shutterstock.com/image-photo/leh-ladakh-indiajune-8-2017-600nw-796094905.jpg"},
+  {id:5,name:"Kerala",location:"India",type:"Nature",budget:"Medium",tripType:"Domestic",description:"Backwaters and greenery",image:"https://tse4.mm.bing.net/th/id/OIP.OGQKGxoipI5VXIRD5QTv3QHaEK?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:6,name:"Rishikesh",location:"India",type:"Adventure",budget:"Low",tripType:"Domestic",description:"River rafting and yoga",image:"https://tse1.mm.bing.net/th/id/OIP.dLCENlw0r39Em78gZRznmAHaFN?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:7,name:"Andaman",location:"India",type:"Leisure",budget:"High",tripType:"Domestic",description:"Crystal clear beaches",image:"https://www.andamantourism.org/wp-content/uploads/2023/08/Major-Tourist-Attractions-in-Andaman.jpg"},
+  {id:8,name:"Udaipur",location:"India",type:"Romantic",budget:"Medium",tripType:"Domestic",description:"City of lakes",image:"https://www.tourmyindia.com/blog/wp-content/uploads/2020/11/City-Palace-Udaipur.jpg"},
+  {id:9,name:"Dubai",location:"UAE",type:"Luxury",budget:"High",tripType:"International",description:"Skyscrapers and desert safari",image:"https://th.bing.com/th/id/R.27d26e1b15fd1aa0f9486df371f7cce4?rik=Bh28%2balRCZoGaw&riu=http%3a%2f%2fwww.royaladventuretourism.com%2ffiles%2fmodern-city-tour-with-burj-khalifa-royal-adventure.jpg%3f100e21c167&ehk=h5hkuRfXQX%2frv4tkMAYf0j28oX7ymiGi1SIoMTTlFm4%3d&risl=&pid=ImgRaw&r=0"},
+  {id:10,name:"Paris",location:"France",type:"Romantic",budget:"High",tripType:"International",description:"City of love",image:"https://tse2.mm.bing.net/th/id/OIP.XJV8sAkHM9UDOBITw2h2PwHaE5?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:11,name:"Bali",location:"Indonesia",type:"Leisure",budget:"Medium",tripType:"International",description:"Beaches and temples",image:"https://tse3.mm.bing.net/th/id/OIP.WgvSIPTwAcBbNcVgomwLqwHaFS?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:12,name:"Tokyo",location:"Japan",type:"Urban",budget:"High",tripType:"International",description:"Futuristic city life",image:"https://a.cdn-hotels.com/gdcs/production172/d1381/8efd3f69-63bb-4398-a595-095cea25fc37.jpg"},
+  {id:13,name:"Maldives",location:"Maldives",type:"Luxury",budget:"High",tripType:"International",description:"Overwater villas",image:"https://wallpapers.com/images/hd/maldives-island-1200-x-740-wallpaper-x43656re721me1rz.jpg"},
+  {id:14,name:"Singapore",location:"Singapore",type:"Urban",budget:"Medium",tripType:"International",description:"Clean and modern city",image:"https://www.stokedtotravel.com/wp-content/uploads/2020/11/Singapore-1.jpg"},
+  {id:15,name:"Hampi",location:"India",type:"Historical",budget:"Low",tripType:"Domestic",description:"Ancient ruins",image:"https://tse2.mm.bing.net/th/id/OIP.yurcXJwWt5CgaAwqwV7PZgHaEP?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:16,name:"Coorg",location:"India",type:"Nature",budget:"Medium",tripType:"Domestic",description:"Coffee plantations",image:"https://tse4.mm.bing.net/th/id/OIP.kBG_cvnlb8m88T6crg4MCQHaFB?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:17,name:"Varanasi",location:"India",type:"Spiritual",budget:"Low",tripType:"Domestic",description:"Oldest living city",image:"https://tse1.mm.bing.net/th/id/OIP.tKNUwgqoAvWd1lXvk5KkdgHaEx?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:18,name:"Shimla",location:"India",type:"Leisure",budget:"Medium",tripType:"Domestic",description:"Hill station vibes",image:"https://www.tourmyindia.com/socialimg/top-tourist-attractions-shimla-himachal.jpg"},
+  {id:19,name:"New York",location:"USA",type:"Urban",budget:"High",tripType:"International",description:"The city that never sleeps",image:"https://tse1.mm.bing.net/th/id/OIP.ClxZrA9zC9flog4R8AoG2gHaFj?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:20,name:"London",location:"UK",type:"Cultural",budget:"High",tripType:"International",description:"History meets modern",image:"https://tse3.mm.bing.net/th/id/OIP.pSR5avE6aTZi-iWSMEqWPQHaFj?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:21,name:"Bangkok",location:"Thailand",type:"Urban",budget:"Low",tripType:"International",description:"Street food paradise",image:"https://i0.wp.com/www.tusktravel.com/blog/wp-content/uploads/2022/10/Bangkok-Thailand.jpg?fit=1183%2C887&ssl=1"},
+  {id:22,name:"Rome",location:"Italy",type:"Historical",budget:"Medium",tripType:"International",description:"Ancient architecture",image:"https://www.fodors.com/wp-content/uploads/2018/10/HERO_UltimateRome_Hero_shutterstock789412159.jpg"},
+  {id:23,name:"Pondicherry",location:"India",type:"Leisure",budget:"Low",tripType:"Domestic",description:"French vibes",image:"https://hikerwolf.com/wp-content/uploads/2020/03/WhatsApp-Image-2020-03-31-at-3.18.20-PM-1.jpeg"},
+  {id:24,name:"Spiti Valley",location:"India",type:"Adventure",budget:"High",tripType:"Domestic",description:"Cold desert mountains",image:"https://tse3.mm.bing.net/th/id/OIP.kfOCC7nc4_4Lesec_1JH6wHaEz?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:25,name:"Sydney",location:"Australia",type:"Leisure",budget:"High",tripType:"International",description:"Opera house and beaches",image:"https://tse1.mm.bing.net/th/id/OIP.x-OIRj6seBewJoR-v-nK1wHaE7?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:26,name:"Cape Town",location:"South Africa",type:"Nature",budget:"Medium",tripType:"International",description:"Mountains and ocean",image:"https://a.cdn-hotels.com/gdcs/production37/d996/ca2a82aa-2617-4fac-8e5d-94afa4324d5d.jpg"},
+  {id:27,name:"Mysore",location:"India",type:"Cultural",budget:"Low",tripType:"Domestic",description:"Royal heritage",image:"https://karnatakatourism.org/wp-content/uploads/2020/06/40_2018_Mysore-Palace-3.jpg"},
+  {id:28,name:"Ooty",location:"India",type:"Nature",budget:"Low",tripType:"Domestic",description:"Tea gardens",image:"https://experiencekerala.in/kerala-tourism-blog/wp-content/uploads/2020/03/13-25.jpg"},
+  {id:29,name:"Barcelona",location:"Spain",type:"Cultural",budget:"Medium",tripType:"International",description:"Architecture and beaches",image:"https://tse1.mm.bing.net/th/id/OIP.LUVlSC5BarbZmUHwBKktWgHaE8?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:30,name:"Iceland",location:"Iceland",type:"Nature",budget:"High",tripType:"International",description:"Northern lights",image:"https://tse2.mm.bing.net/th/id/OIP.bqwxv_iY3QlmOBtszuKgxwHaE7?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:31,name:"Darjeeling",location:"India",type:"Nature",budget:"Low",tripType:"Domestic",description:"Tea hills",image:"https://tse2.mm.bing.net/th/id/OIP.gsvAr_qj-p56y2-IsjFt8AHaEK?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:32,name:"Amritsar",location:"India",type:"Spiritual",budget:"Low",tripType:"Domestic",description:"Golden temple",image:"https://www.holidify.com/images/bgImages/AMRITSAR.jpg"},
+  {id:33,name:"Seoul",location:"South Korea",type:"Urban",budget:"Medium",tripType:"International",description:"K-culture hub",image:"https://www.agoda.com/wp-content/uploads/2024/08/Namsan-Tower-during-autumn-in-Seoul-South-Korea.jpg"},
+  {id:34,name:"Zurich",location:"Switzerland",type:"Nature",budget:"High",tripType:"International",description:"Lakes and mountains",image:"https://img.veenaworld.com/wp-content/uploads/2023/06/10-Best-Things-to-Do-in-Switzerlands-Largest-City-Zurich.jpg"},
+  {id:35,name:"Kodaikanal",location:"India",type:"Nature",budget:"Low",tripType:"Domestic",description:"Cool hill station",image:"https://www.tourmyindia.com/states/tamilnadu/images/kodaikanal-lake.jpg"},
+  {id:36,name:"Gokarna",location:"India",type:"Leisure",budget:"Low",tripType:"Domestic",description:"Peaceful beaches",image:"https://static2.tripoto.com/media/filter/tst/img/OgData/1537153061_faacebook2_11.png"},
+  {id:37,name:"Los Angeles",location:"USA",type:"Urban",budget:"High",tripType:"International",description:"Hollywood vibes",image:"https://tse3.mm.bing.net/th/id/OIP.CDBpqsAtjnIKGvdQegA1tgHaEO?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:38,name:"Berlin",location:"Germany",type:"Historical",budget:"Medium",tripType:"International",description:"Rich history",image:"https://tourscanner.com/blog/wp-content/uploads/2023/06/Berlin-Cathedral-1024x683.jpg"},
+  {id:39,name:"Mahabaleshwar",location:"India",type:"Nature",budget:"Low",tripType:"Domestic",description:"Strawberries and hills",image:"https://tse4.mm.bing.net/th/id/OIP.LSVHwH-5fePjzvws5aHccAHaFj?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:40,name:"Nainital",location:"India",type:"Leisure",budget:"Low",tripType:"Domestic",description:"Lake town",image:"https://tse4.mm.bing.net/th/id/OIP.5B4hLybrfWQ639g6JH7J5AHaEc?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:41,name:"Venice",location:"Italy",type:"Romantic",budget:"High",tripType:"International",description:"Canals and gondolas",image:"https://lp-cms-production.imgix.net/2021-09/shutterstockRF_696042793.jpg?auto=format&q=40&ar=16:9&fit=crop"},
+  {id:42,name:"Phuket",location:"Thailand",type:"Leisure",budget:"Medium",tripType:"International",description:"Island life",image:"https://tse2.mm.bing.net/th/id/OIP.kY3JsT84m5ntyBOSg-wyZwHaEo?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:43,name:"Shillong",location:"India",type:"Nature",budget:"Low",tripType:"Domestic",description:"Scotland of India",image:"https://blog.explurger.com/wp-content/uploads/2024/11/65f77cd305e62109a2392d19bc2ccac6_1000x1000-1024x538.jpg"},
+  {id:44,name:"Tawang",location:"India",type:"Adventure",budget:"High",tripType:"Domestic",description:"Snowy mountains",image:"https://th.bing.com/th/id/OIP.ecwSEuEKsR-lCOM83ZXYzwHaE5?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:45,name:"Amsterdam",location:"Netherlands",type:"Cultural",budget:"Medium",tripType:"International",description:"Canals and bikes",image:"https://www.tripsavvy.com/thmb/baaY0l7jPNAjb-llMTR5IpmIW3c=/2169x1383/filters:fill(auto,1)/view-of-canal-in-amsterdam-923546342-5c7443b546e0fb000143629e.jpg"},
+  {id:46,name:"Dubai Desert",location:"UAE",type:"Adventure",budget:"High",tripType:"International",description:"Desert safari",image:"https://chezcharlesrestaurant.ae/wp-content/uploads/2022/09/top-reasons-to-experience-a-luxury-desert-adventure-in-dubai.jpg"},
+  {id:47,name:"Kasol",location:"India",type:"Adventure",budget:"Low",tripType:"Domestic",description:"Backpacker paradise",image:"https://static2.tripoto.com/media/filter/tst/img/OgData/1507964409_kasol_cover.jpg"},
+  {id:48,name:"Ziro Valley",location:"India",type:"Nature",budget:"Low",tripType:"Domestic",description:"Hidden gem",image:"https://tse2.mm.bing.net/th/id/OIP.BWsHeaWSgQkQhqRHpXI5PwHaEO?rs=1&pid=ImgDetMain&o=7&rm=3"},
+  {id:49,name:"Prague",location:"Czech Republic",type:"Cultural",budget:"Medium",tripType:"International",description:"Fairytale city",image:"https://www.gokitetours.com/wp-content/uploads/2025/01/Top-10-Must-See-Tourist-Attractions-in-Prague-Czech-Republic.webp"},
+  {id:50,name:"Santorini",location:"Greece",type:"Romantic",budget:"High",tripType:"International",description:"White and blue paradise",image:"https://a.cdn-hotels.com/gdcs/production18/d1838/041ae6b1-0a88-4c22-a648-53a22dd4a006.jpg"},
+  {id:51,name:"Lucknow",location:"India",type:"Cultural",budget:"Low",tripType:"Domestic",description:"City of Nawabs, famous for food and heritage",image:"https://thumbs.dreamstime.com/b/rumi-darwaza-lucknow-uttar-pradesh-india-imposing-gateway-which-was-built-nawab-asaf-ud-daula-rumi-darwaza-220793362.jpg"},
+  {id:52,name:"Chandrashila",location:"India",type:"Adventure",budget:"Medium",tripType:"Domestic",description:"Trek with stunning Himalayan summit views",image:"https://i.pinimg.com/originals/ff/34/7b/ff347b0e6e65fedf006759c13fdf7884.jpg"},
+  {id:53,name:"Statue of Unity",location:"India",type:"Historical",budget:"Medium",tripType:"Domestic",description:"World's tallest statue",image:"https://narmadatentcity.info/wp-content/uploads/2019/03/Statue-of-Unity-Tour-Guide.jpg"},
+  {id:54,name:"Rann of Kutch",location:"India",type:"Nature",budget:"Medium",tripType:"Domestic",description:"White salt desert and Rann Utsav",image:"https://www.tripadventurer.in/wp-content/uploads/2024/01/The-Great-Rann-of-Kutch.jpg"},
+  {id:55,name:"Dwarka",location:"India",type:"Spiritual",budget:"Low",tripType:"Domestic",description:"One of the Char Dham pilgrimage sites",image:"https://theindianeye.com/wp-content/uploads/2024/08/Dwarka-upl.jpg"}
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let filters = { search: '', budget: 'all', type: 'all', trip: 'all' };
+let tripItems = [];
+let currentDest = null;
+let lastSurpriseId = null;
+let itineraryVisible = {};
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('heroSearch');
+  input.addEventListener('input', e => {
+    filters.search = e.target.value.trim().toLowerCase();
+    renderCards();
+  });
+
+  document.getElementById('heroSearchBtn').addEventListener('click', () => {
+    filters.search = input.value.trim().toLowerCase();
+    renderCards();
+    if(filters.search) document.getElementById('destinations').scrollIntoView({behavior:'smooth'});
+  });
+
+  // Set orbit radii responsively
+  setOrbitRadii();
+  window.addEventListener('resize', setOrbitRadii);
+
+  renderCards();
+  updateTripPanel();
+});
+
+function setOrbitRadii() {
+  const plane = document.getElementById('orbitPlane');
+  const W = window.innerWidth, H = window.innerHeight;
+  const rx = Math.min(Math.round(W * 0.36), 340);
+  const ry = Math.min(Math.round(H * 0.28), 220);
+  const rx70 = Math.round(rx * 0.7);
+  const ry71 = Math.round(ry * Math.sin(Math.PI/3));
+  plane.style.setProperty('--rx', rx + 'px');
+  plane.style.setProperty('--ry', ry + 'px');
+  plane.style.setProperty('--rx70', rx70 + 'px');
+  plane.style.setProperty('--ry71', ry71 + 'px');
+}
+
+// ── Show hardcoded itinerary ───────────────────────────────────────────────
+function showItinerary() {
+  if (!currentDest) return;
+  const output = document.getElementById('itineraryOutput');
+  const btn = document.getElementById('showItineraryBtn');
+
+  if (itineraryVisible[currentDest.id]) {
+    output.classList.remove('visible');
+    btn.innerHTML = '🗓️ View 5-Day Itinerary';
+    itineraryVisible[currentDest.id] = false;
+    return;
+  }
+
+  const days = itineraries[currentDest.id];
+  if (!days) {
+    output.classList.add('visible');
+    output.innerHTML = `<div style="color:var(--gray);font-size:0.88rem;text-align:center;padding:1rem;">Itinerary coming soon for this destination!</div>`;
+    btn.innerHTML = '✕ Hide Itinerary';
+    itineraryVisible[currentDest.id] = true;
+    return;
+  }
+
+  const colors = ['#0A4D68','#088395','#2D6A4F','#7C3AED','#FF6B35'];
+  output.innerHTML = `<div class="itinerary-days">` +
+    days.map((d, i) => {
+      const acts = d.activities.split('•').filter(a=>a.trim()).map(a => `<div>• ${a.trim()}</div>`).join('');
+      return `
+        <div class="itinerary-day" style="border-left-color:${colors[i%colors.length]};animation-delay:${i*0.08}s">
+          <div class="itinerary-day-header">
+            <span class="day-num" style="background:${colors[i%colors.length]}">Day ${d.day}</span>
+            <span class="day-title">${d.title}</span>
+          </div>
+          <div class="day-activities">${acts}</div>
+        </div>`;
+    }).join('') + `</div>`;
+
+  output.classList.add('visible');
+  btn.innerHTML = '✕ Hide Itinerary';
+  itineraryVisible[currentDest.id] = true;
+}
+
+// ── SURPRISE ME ───────────────────────────────────────────────────────────
+function surpriseMe() {
+  let pick;
+  do { pick = destinations[Math.floor(Math.random() * destinations.length)]; }
+  while (pick.id === lastSurpriseId && destinations.length > 1);
+  lastSurpriseId = pick.id;
+
+  filters = { search: '', budget: 'all', type: 'all', trip: 'all' };
+  document.getElementById('heroSearch').value = '';
+  document.querySelectorAll('#budgetFilters .filter-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+  document.querySelectorAll('#tripFilters .filter-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+  document.querySelectorAll('#typeFilters .filter-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+
+  changeHeroBg(pick);
+  document.getElementById('destinations').scrollIntoView({behavior:'smooth'});
+  setTimeout(() => highlightSurpriseCard(pick), 600);
+  showSurpriseToast(`✈️ How about ${pick.name}, ${pick.location}?`);
+  setTimeout(() => openModal(pick), 300);
+}
+
+function changeHeroBg(dest) {
+  const overlay = document.getElementById('heroBgOverlay');
+  const label   = document.getElementById('heroDestLabel');
+  const nameEl  = document.getElementById('heroDestName');
+  overlay.style.backgroundImage = `url('${dest.image}')`;
+  overlay.classList.add('active');
+  nameEl.textContent = `${dest.name}, ${dest.location}`;
+  label.classList.add('show');
+}
+
+function highlightSurpriseCard(dest) {
+  renderCards();
+  setTimeout(() => {
+    const grid = document.getElementById('destGrid');
+    Array.from(grid.children).forEach(card => {
+      const name = card.querySelector('.card-name');
+      if(name && name.textContent === dest.name) {
+        card.classList.add('surprise-reveal');
+        card.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(() => card.classList.remove('surprise-reveal'), 600);
+      }
+    });
+  }, 100);
+}
+
+function showSurpriseToast(msg) {
+  const toast = document.getElementById('surpriseToast');
+  document.getElementById('surpriseToastText').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function updateHeroOnCardClick(dest) { changeHeroBg(dest); }
+
+// ── Render cards ──────────────────────────────────────────────────────────
+function renderCards() {
+  const grid  = document.getElementById('destGrid');
+  const noRes = document.getElementById('noResults');
+  Array.from(grid.children).forEach(c => { if(c !== noRes) c.remove(); });
+
+  const filtered = destinations.filter(d => {
+    const bm = filters.budget === 'all' || d.budget.toLowerCase() === filters.budget;
+    const tm = filters.type   === 'all' || d.type.toLowerCase()   === filters.type;
+    const trm = filters.trip  === 'all' || d.tripType.toLowerCase() === filters.trip;
+    const sm = !filters.search || `${d.name} ${d.location} ${d.type} ${d.description}`.toLowerCase().includes(filters.search);
+    return bm && tm && trm && sm;
+  });
+
+  document.getElementById('resultCount').textContent =
+    `${filtered.length} destination${filtered.length !== 1 ? 's' : ''} found`;
+
+  if(filtered.length === 0) { noRes.classList.add('show'); return; }
+  noRes.classList.remove('show');
+
+  filtered.forEach(d => {
+    const inTrip = tripItems.some(t => t.id === d.id);
+    const bc = d.budget.toLowerCase();
+    const be = d.budget === 'Low' ? '💚' : d.budget === 'Medium' ? '💛' : '❤️';
+    const tripLabel = d.tripType === 'Domestic' ? '🇮🇳' : '🌍';
+    const card = document.createElement('div');
+    card.className = 'dest-card';
+    card.innerHTML = `
+      <div class="card-img"><img src="${d.image}" alt="${d.name}" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-location">📍 ${d.location} <span style="margin-left:4px;opacity:0.7">${tripLabel} ${d.tripType}</span></div>
+        <div class="card-name">${d.name}</div>
+        <div class="card-desc">${d.description}</div>
+        <div class="budget-badge ${bc}">${be} ${d.budget} · <span style="font-weight:700;">${getCostRange(d.id)}</span></div>
+        <div class="card-meta">
+          <span>${d.type}</span>
+          <button class="add-btn ${inTrip ? 'added' : ''}" onclick="event.stopPropagation(); addToTrip(${d.id}, this)">
+            ${inTrip ? '✓ Added' : '＋ Add'}
+          </button>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => { updateHeroOnCardClick(d); openModal(d); });
+    grid.appendChild(card);
+  });
+}
+
+// ── Filter chips — now supports trip filter row ───────────────────────────
+function setFilter(type, value, btn) {
+  filters[type] = value;
+  const gidMap = { budget: 'budgetFilters', type: 'typeFilters', trip: 'tripFilters' };
+  const gid = gidMap[type];
+  if(gid) {
+    document.getElementById(gid).querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  renderCards();
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openModal(d) {
+  currentDest = d;
+
+  // Reset itinerary UI
+  const output = document.getElementById('itineraryOutput');
+  const btn    = document.getElementById('showItineraryBtn');
+  output.classList.remove('visible');
+  output.innerHTML = '';
+  btn.innerHTML = '🗓️ View 5-Day Itinerary';
+
+  document.getElementById('modalImg').innerHTML = `
+    <img src="${d.image}" alt="${d.name}">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+  `;
+  document.getElementById('modalName').textContent     = d.name;
+  document.getElementById('modalLocation').textContent = `📍 ${d.location}`;
+  document.getElementById('modalInfo').innerHTML = `
+    <div class="modal-info-item"><strong>${d.type}</strong><span>Type</span></div>
+    <div class="modal-info-item"><strong>${d.budget}</strong><span>Budget</span></div>
+    <div class="modal-info-item"><strong>${d.tripType||'—'}</strong><span>Trip</span></div>
+  `;
+
+  const cr = tripCostINR[d.id];
+  const be = d.budget === 'Low' ? '💚' : d.budget === 'Medium' ? '💛' : '❤️';
+  document.getElementById('modalCostBanner').innerHTML = cr
+    ? `<div>
+        <div class="cost-label">${be} Estimated Cost (per person)</div>
+        <div class="cost-value">${formatINR(cr[0])} – ${formatINR(cr[1])}</div>
+        <div class="cost-note">Includes flights, accommodation & food (5–7 nights approx)</div>
+       </div>` : '';
+
+  document.getElementById('modalDesc').textContent = d.description;
+
+  const inTrip = tripItems.some(t => t.id === d.id);
+  const addBtn = document.getElementById('modalAddBtn');
+  addBtn.textContent = inTrip ? '✓ Added to Trip!' : '＋ Add to My Trip';
+  addBtn.onclick = () => {
+    addToTrip(d.id, null);
+    addBtn.textContent = tripItems.some(t => t.id === d.id) ? '✓ Added to Trip!' : '＋ Add to My Trip';
+  };
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if(e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Trip management ───────────────────────────────────────────────────────
+function addToTrip(id, btn) {
+  const d   = destinations.find(x => x.id === id);
+  const idx = tripItems.findIndex(t => t.id === id);
+  if(idx === -1) {
+    tripItems.push(d);
+    if(btn) { btn.textContent = '✓ Added'; btn.classList.add('added','pulse'); setTimeout(() => btn.classList.remove('pulse'), 500); }
+  } else {
+    tripItems.splice(idx, 1);
+    if(btn) { btn.textContent = '＋ Add'; btn.classList.remove('added'); }
+  }
+  updateTripPanel();
+  renderCards();
+}
+
+function removeItem(id) {
+  tripItems = tripItems.filter(t => t.id !== id);
+  updateTripPanel();
+  renderCards();
+}
+
+function updateTripPanel() {
+  const count = tripItems.length;
+  document.getElementById('tripCount').textContent = count;
+  document.getElementById('panelSubtitle').textContent =
+    count === 0 ? 'Start adding destinations!' : `${count} destination${count !== 1 ? 's' : ''} planned`;
+
+  const body    = document.getElementById('panelBody');
+  const summary = document.getElementById('panelSummary');
+
+  if(count === 0) {
+    body.innerHTML = `<div class="itinerary-empty"><h4>Your trip is empty</h4><p>Add destinations to start planning</p></div>`;
+    summary.style.display = 'none';
+    return;
+  }
+
+  body.innerHTML = tripItems.map(d => {
+    const cr  = tripCostINR[d.id];
+    const cs  = cr ? `${formatINR(cr[0])} – ${formatINR(cr[1])}` : '—';
+    const hasIt = !!itineraries[d.id];
+    return `
+      <div class="itinerary-item">
+        <img class="item-img" src="${d.image}" alt="${d.name}">
+        <div class="item-info">
+          <strong>${d.name}</strong>
+          <div class="item-loc">${d.location} · ${d.type}</div>
+          <div class="item-cost">💰 ${cs} / person</div>
+          ${hasIt ? `<div style="font-size:0.75rem;color:#7C3AED;margin-top:2px;">🗓️ Itinerary available</div>` : ''}
+        </div>
+        <button class="item-remove" onclick="removeItem(${d.id})">✕</button>
+      </div>
+    `;
+  }).join('');
+
+  const low    = tripItems.filter(d => d.budget === 'Low');
+  const medium = tripItems.filter(d => d.budget === 'Medium');
+  const high   = tripItems.filter(d => d.budget === 'High');
+
+  const pct = n => count > 0 ? Math.round((n/count)*100) : 0;
+  document.getElementById('barLow').style.width    = pct(low.length)+'%';
+  document.getElementById('barMedium').style.width = pct(medium.length)+'%';
+  document.getElementById('barHigh').style.width   = pct(high.length)+'%';
+  document.getElementById('legendLow').textContent    = low.length;
+  document.getElementById('legendMedium').textContent = medium.length;
+  document.getElementById('legendHigh').textContent   = high.length;
+
+  const sumRange = items => items.reduce((acc,d) => {
+    const r = tripCostINR[d.id] || [0,0];
+    return [acc[0]+r[0], acc[1]+r[1]];
+  }, [0,0]);
+
+  const lr = sumRange(low), mr = sumRange(medium), hr = sumRange(high), tr = sumRange(tripItems);
+  document.getElementById('costLow').textContent    = low.length    ? `${formatINR(lr[0])} – ${formatINR(lr[1])}` : '₹0';
+  document.getElementById('costMedium').textContent = medium.length ? `${formatINR(mr[0])} – ${formatINR(mr[1])}` : '₹0';
+  document.getElementById('costHigh').textContent   = high.length   ? `${formatINR(hr[0])} – ${formatINR(hr[1])}` : '₹0';
+  document.getElementById('summaryBudget').textContent = `${formatINR(tr[0])} – ${formatINR(tr[1])}`;
+  document.getElementById('summaryCount').textContent = count;
+  summary.style.display = 'block';
+}
+
+// ── Panel ─────────────────────────────────────────────────────────────────
+function openPanel()  { document.getElementById('itineraryPanel').classList.add('open'); }
+function closePanel() { document.getElementById('itineraryPanel').classList.remove('open'); }
+
+// ── Dark mode ─────────────────────────────────────────────────────────────
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  document.querySelector('.theme-toggle').textContent =
+    document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+}
+
+// ── Navbar scroll ─────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
+});
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</body></html>
